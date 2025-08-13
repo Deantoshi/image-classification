@@ -9,6 +9,7 @@ interface UploadResponse {
 const FileUpload = () => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [clearing, setClearing] = useState(false)
   const [uploadResult, setUploadResult] = useState<string | null>(null)
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
 
@@ -54,9 +55,30 @@ const FileUpload = () => {
     }
   }
 
-  const clearFiles = () => {
+  const clearFiles = async () => {
+    setClearing(true)
+    
+    try {
+      const response = await fetch('http://localhost:8000/clear-all', {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        setUploadResult(`✅ ${result.message}`)
+      } else {
+        const error = await response.json()
+        setUploadResult(`❌ Error: ${error.detail}`)
+      }
+    } catch (error) {
+      console.error('Clear error:', error)
+      setUploadResult(`❌ Error: Failed to connect to server. Make sure FastAPI is running on port 8000.`)
+    } finally {
+      setClearing(false)
+    }
+
+    // Clear the UI state
     setSelectedFiles(null)
-    setUploadResult(null)
     setUploadedFiles([])
     // Reset the file input
     const fileInput = document.getElementById('file-input') as HTMLInputElement
@@ -102,7 +124,7 @@ const FileUpload = () => {
           multiple
           accept="image/*"
           onChange={handleFileSelect}
-          disabled={uploading}
+          disabled={uploading || clearing}
           style={{ 
             padding: '12px 16px', 
             background: 'rgba(17, 24, 39, 0.8)',
@@ -113,7 +135,7 @@ const FileUpload = () => {
             color: '#e0e6ed',
             fontSize: '1rem',
             transition: 'all 0.3s ease',
-            cursor: uploading ? 'not-allowed' : 'pointer'
+            cursor: (uploading || clearing) ? 'not-allowed' : 'pointer'
           }}
           onFocus={(e) => {
             e.target.style.borderColor = 'rgba(139, 92, 246, 0.6)'
@@ -154,32 +176,32 @@ const FileUpload = () => {
       <div style={{ display: 'flex', gap: '12px', marginBottom: '15px', flexWrap: 'wrap' }}>
         <button 
           onClick={handleUpload} 
-          disabled={!selectedFiles || uploading}
+          disabled={!selectedFiles || uploading || clearing}
           style={{
             padding: '12px 24px',
-            background: uploading 
+            background: (uploading || clearing)
               ? 'rgba(75, 85, 99, 0.5)' 
               : 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
             color: '#ffffff',
             border: 'none',
             borderRadius: '8px',
-            cursor: uploading ? 'not-allowed' : 'pointer',
+            cursor: (uploading || clearing) ? 'not-allowed' : 'pointer',
             fontWeight: '600',
             fontSize: '1rem',
             transition: 'all 0.3s ease',
-            boxShadow: uploading 
+            boxShadow: (uploading || clearing)
               ? 'none' 
               : '0 4px 16px rgba(139, 92, 246, 0.3)',
-            transform: uploading ? 'none' : 'translateY(0)',
+            transform: (uploading || clearing) ? 'none' : 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            if (!uploading) {
+            if (!uploading && !clearing) {
               e.currentTarget.style.transform = 'translateY(-2px)'
               e.currentTarget.style.boxShadow = '0 8px 20px rgba(139, 92, 246, 0.4)'
             }
           }}
           onMouseLeave={(e) => {
-            if (!uploading) {
+            if (!uploading && !clearing) {
               e.currentTarget.style.transform = 'translateY(0)'
               e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 92, 246, 0.3)'
             }
@@ -190,30 +212,30 @@ const FileUpload = () => {
 
         <button 
           onClick={clearFiles}
-          disabled={uploading}
+          disabled={uploading || clearing}
           style={{
             padding: '12px 24px',
             background: 'rgba(75, 85, 99, 0.6)',
             color: '#e0e6ed',
             border: '1px solid rgba(75, 85, 99, 0.4)',
             borderRadius: '8px',
-            cursor: uploading ? 'not-allowed' : 'pointer',
+            cursor: (uploading || clearing) ? 'not-allowed' : 'pointer',
             fontWeight: '500',
             fontSize: '1rem',
             transition: 'all 0.3s ease'
           }}
           onMouseEnter={(e) => {
-            if (!uploading) {
+            if (!uploading && !clearing) {
               e.currentTarget.style.background = 'rgba(75, 85, 99, 0.8)'
             }
           }}
           onMouseLeave={(e) => {
-            if (!uploading) {
+            if (!uploading && !clearing) {
               e.currentTarget.style.background = 'rgba(75, 85, 99, 0.6)'
             }
           }}
         >
-          🗑️ Clear
+          {clearing ? '⏳ Clearing...' : '🗑️ Clear All Files'}
         </button>
       </div>
 
