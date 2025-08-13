@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import os
 import shutil
+import subprocess
+import sys
 from typing import List
 import mimetypes
 
@@ -148,6 +150,67 @@ async def get_csv_content(filename: str):
             "row_count": len(data),
             "status": "success"
         }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/classify")
+async def classify_images():
+    """
+    Run the MaskrcnnGradAidAg.py ML script to process uploaded images.
+    """
+    try:
+        # Check if input directory exists and has files
+        if not os.path.exists(INPUT_DIR):
+            raise HTTPException(status_code=400, detail="Input directory does not exist. Please upload images first.")
+        
+        input_files = [f for f in os.listdir(INPUT_DIR) if os.path.isfile(os.path.join(INPUT_DIR, f))]
+        if not input_files:
+            raise HTTPException(status_code=400, detail="No files found in input directory. Please upload images first.")
+        
+        # Check if the ML script exists
+        ml_script_path = "MaskrcnnGradAidAg.py"
+        if not os.path.exists(ml_script_path):
+            raise HTTPException(status_code=500, detail=f"ML script '{ml_script_path}' not found in backend directory.")
+        
+        # Run the ML script
+        try:
+            result = subprocess.run(
+                [sys.executable, ml_script_path],
+                cwd=os.getcwd(),
+                capture_output=True,
+                text=True,
+                timeout=300  # 5 minute timeout
+            )
+            
+            if result.returncode == 0:
+                # Check if output files were generated
+                output_files = []
+                if os.path.exists(OUTPUT_DIR):
+                    output_files = [f for f in os.listdir(OUTPUT_DIR) if os.path.isfile(os.path.join(OUTPUT_DIR, f))]
+                
+                return {
+                    "message": "Classification completed successfully",
+                    "status": "success",
+                    "output_files_generated": len(output_files),
+                    "stdout": result.stdout,
+                    "processed_files": input_files
+                }
+            else:
+                return {
+                    "message": "Classification completed with errors",
+                    "status": "error",
+                    "error_code": result.returncode,
+                    "stdout": result.stdout,
+                    "stderr": result.stderr
+                }
+                
+        except subprocess.TimeoutExpired:
+            raise HTTPException(status_code=408, detail="Classification process timed out after 5 minutes.")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to run classification script: {str(e)}")
     
     except HTTPException:
         raise
