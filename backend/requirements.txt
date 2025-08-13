@@ -1,19 +1,19 @@
 # Core ML and Computer Vision packages
-torch=2.8.0
-torchaudio=2.8.0+cpu
-torchvision=0.23.0+cpu
-opencv-python=4.12.0.88
+torch==2.8.0
+torchaudio==2.8.0+cpu
+torchvision==0.23.0+cpu
+opencv-python==4.12.0.88
 
 # Data processing
-numpy=2.2.6
-pandas=2.2.2
+numpy==2.2.6
+pandas==2.2.2
 
 # Detectron2 - see installation notes below
 # detectron2 @ git+https://github.com/facebookresearch/detectron2.git
 
 # Additional dependencies that may be required
-Pillow=11.3.0
-matplotlib=3.10.5
+Pillow==11.3.0
+matplotlib==3.10.5
 
 # Optional: For better performance
 # Install these if you encounter issues:
