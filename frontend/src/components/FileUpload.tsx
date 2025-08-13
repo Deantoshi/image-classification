@@ -1,249 +1,171 @@
-import React, { useState, useCallback } from 'react';
-import { Upload, Image, CheckCircle, AlertCircle, X } from 'lucide-react';
+import { useState } from 'react'
 
-interface UploadedFile {
-  file: File;
-  preview: string;
-  status: 'pending' | 'uploading' | 'success' | 'error';
-  id: string;
+interface UploadResponse {
+  message: string;
+  files: string[];
+  status: string;
 }
 
-const ImageUploadComponent: React.FC = () => {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [isDragOver, setIsDragOver] = useState(false);
+const FileUpload = () => {
+  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadResult, setUploadResult] = useState<string | null>(null)
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
 
-  const generateId = () => Math.random().toString(36).substr(2, 9);
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedFiles(event.target.files)
+    setUploadResult(null)
+    setUploadedFiles([])
+  }
 
-  const validateFile = (file: File): boolean => {
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    const maxSize = 10 * 1024 * 1024; // 10MB
-
-    if (!validTypes.includes(file.type)) {
-      alert('Please upload only image files (JPEG, PNG, GIF, WebP)');
-      return false;
+  const handleUpload = async () => {
+    if (!selectedFiles || selectedFiles.length === 0) {
+      alert('Please select files to upload')
+      return
     }
 
-    if (file.size > maxSize) {
-      alert('File size must be less than 10MB');
-      return false;
-    }
-
-    return true;
-  };
-
-  const uploadFile = async (file: File): Promise<boolean> => {
-    const formData = new FormData();
-    formData.append('image', file);
+    setUploading(true)
+    setUploadResult(null)
 
     try {
-      // Replace this URL with your actual backend endpoint
-      const response = await fetch('/api/upload', {
+      const formData = new FormData()
+      for (let i = 0; i < selectedFiles.length; i++) {
+        formData.append('files', selectedFiles[i])
+      }
+
+      const response = await fetch('http://localhost:8000/upload', {
         method: 'POST',
         body: formData,
-      });
+      })
 
-      if (!response.ok) {
-        throw new Error(`Upload failed: ${response.statusText}`);
+      if (response.ok) {
+        const result: UploadResponse = await response.json()
+        setUploadResult(`✅ ${result.message}`)
+        setUploadedFiles(result.files)
+      } else {
+        const error = await response.json()
+        setUploadResult(`❌ Error: ${error.detail}`)
       }
-
-      const result = await response.json();
-      console.log('Upload successful:', result);
-      return true;
     } catch (error) {
-      console.error('Upload error:', error);
-      return false;
+      console.error('Upload error:', error)
+      setUploadResult(`❌ Error: Failed to connect to server. Make sure FastAPI is running on port 8000.`)
+    } finally {
+      setUploading(false)
     }
-  };
+  }
 
-  const handleFiles = useCallback(async (files: FileList) => {
-    const newFiles: UploadedFile[] = [];
-
-    Array.from(files).forEach((file) => {
-      if (validateFile(file)) {
-        const preview = URL.createObjectURL(file);
-        newFiles.push({
-          file,
-          preview,
-          status: 'pending',
-          id: generateId(),
-        });
-      }
-    });
-
-    setUploadedFiles(prev => [...prev, ...newFiles]);
-
-    // Upload files one by one
-    for (const uploadedFile of newFiles) {
-      setUploadedFiles(prev => 
-        prev.map(f => 
-          f.id === uploadedFile.id 
-            ? { ...f, status: 'uploading' }
-            : f
-        )
-      );
-
-      const success = await uploadFile(uploadedFile.file);
-      
-      setUploadedFiles(prev => 
-        prev.map(f => 
-          f.id === uploadedFile.id 
-            ? { ...f, status: success ? 'success' : 'error' }
-            : f
-        )
-      );
+  const clearFiles = () => {
+    setSelectedFiles(null)
+    setUploadResult(null)
+    setUploadedFiles([])
+    // Reset the file input
+    const fileInput = document.getElementById('file-input') as HTMLInputElement
+    if (fileInput) {
+      fileInput.value = ''
     }
-  }, []);
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleFiles(files);
-    }
-  }, [handleFiles]);
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  }, []);
-
-  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      handleFiles(files);
-    }
-    // Reset input value to allow re-uploading the same file
-    e.target.value = '';
-  }, [handleFiles]);
-
-  const removeFile = (id: string) => {
-    setUploadedFiles(prev => {
-      const fileToRemove = prev.find(f => f.id === id);
-      if (fileToRemove) {
-        URL.revokeObjectURL(fileToRemove.preview);
-      }
-      return prev.filter(f => f.id !== id);
-    });
-  };
-
-  const getStatusIcon = (status: UploadedFile['status']) => {
-    switch (status) {
-      case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'error':
-        return <AlertCircle className="w-5 h-5 text-red-500" />;
-      case 'uploading':
-        return <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />;
-      default:
-        return <Upload className="w-5 h-5 text-gray-400" />;
-    }
-  };
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-        Image Upload for ML Classification
-      </h1>
-
-      {/* Upload Area */}
-      <div
-        className={`
-          relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200
-          ${isDragOver 
-            ? 'border-blue-500 bg-blue-50' 
-            : 'border-gray-300 hover:border-gray-400'
-          }
-        `}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-      >
+    <div className="card" style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', marginTop: '20px' }}>
+      <div style={{ marginBottom: '15px' }}>
+        <label htmlFor="file-input" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
+          Select Images:
+        </label>
         <input
+          id="file-input"
           type="file"
           multiple
           accept="image/*"
-          onChange={handleFileInput}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          onChange={handleFileSelect}
+          disabled={uploading}
+          style={{ 
+            padding: '10px', 
+            border: '1px solid #ddd', 
+            borderRadius: '4px',
+            width: '100%',
+            maxWidth: '400px'
+          }}
         />
-        
-        <div className="flex flex-col items-center space-y-4">
-          <div className="p-4 bg-gray-100 rounded-full">
-            <Image className="w-8 h-8 text-gray-600" />
-          </div>
-          <div>
-            <p className="text-lg font-medium text-gray-700">
-              Drop images here or click to upload
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              Supports JPEG, PNG, GIF, WebP (max 10MB each)
-            </p>
-          </div>
-        </div>
       </div>
 
-      {/* Uploaded Files List */}
-      {uploadedFiles.length > 0 && (
-        <div className="mt-8">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            Uploaded Images ({uploadedFiles.length})
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {uploadedFiles.map((uploadedFile) => (
-              <div
-                key={uploadedFile.id}
-                className="relative bg-gray-50 rounded-lg overflow-hidden border border-gray-200"
-              >
-                <div className="aspect-video relative">
-                  <img
-                    src={uploadedFile.preview}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    onClick={() => removeFile(uploadedFile.id)}
-                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-                <div className="p-3">
-                  <p className="text-sm font-medium text-gray-700 truncate mb-1">
-                    {uploadedFile.file.name}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">
-                      {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
-                    </span>
-                    <div className="flex items-center space-x-1">
-                      {getStatusIcon(uploadedFile.status)}
-                      <span className="text-xs capitalize text-gray-600">
-                        {uploadedFile.status}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {selectedFiles && selectedFiles.length > 0 && (
+        <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
+          <strong>Selected files ({selectedFiles.length}):</strong>
+          <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+            {Array.from(selectedFiles).map((file, index) => (
+              <li key={index}>{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)</li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
 
-      {/* Instructions */}
-      <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <h4 className="font-semibold text-blue-800 mb-2">Backend Setup Required:</h4>
-        <p className="text-sm text-blue-700">
-          This component expects a <code>/api/upload</code> endpoint on your backend. 
-          The uploaded files will be sent there and should be saved to your <code>backend/input</code> folder.
-        </p>
-      </div>
-    </div>
-  );
-};
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+        <button 
+          onClick={handleUpload} 
+          disabled={!selectedFiles || uploading}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: uploading ? '#ccc' : '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: uploading ? 'not-allowed' : 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          {uploading ? '⏳ Uploading...' : '📤 Upload Images'}
+        </button>
 
-export default ImageUploadComponent;
+        <button 
+          onClick={clearFiles}
+          disabled={uploading}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#6c757d',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: uploading ? 'not-allowed' : 'pointer'
+          }}
+        >
+          🗑️ Clear
+        </button>
+      </div>
+
+      {uploadResult && (
+        <div style={{ 
+          marginTop: '15px', 
+          padding: '15px', 
+          backgroundColor: uploadResult.startsWith('✅') ? '#d4edda' : '#f8d7da',
+          color: uploadResult.startsWith('✅') ? '#155724' : '#721c24',
+          borderRadius: '4px',
+          border: `1px solid ${uploadResult.startsWith('✅') ? '#c3e6cb' : '#f5c6cb'}`
+        }}>
+          {uploadResult}
+        </div>
+      )}
+
+      {uploadedFiles.length > 0 && (
+        <div style={{ 
+          marginTop: '15px', 
+          padding: '15px', 
+          backgroundColor: '#e7f3ff',
+          borderRadius: '4px',
+          border: '1px solid #b8daff'
+        }}>
+          <strong>📁 Uploaded files ready for processing:</strong>
+          <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+            {uploadedFiles.map((filename, index) => (
+              <li key={index}>{filename}</li>
+            ))}
+          </ul>
+          <p style={{ margin: '10px 0 0 0', fontSize: '14px', color: '#666' }}>
+            💡 Files are now in the backend/input folder and ready for ML processing.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default FileUpload
