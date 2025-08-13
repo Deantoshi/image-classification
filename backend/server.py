@@ -13,7 +13,12 @@ app = FastAPI()
 # Add CORS middleware to allow requests from frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Vite and Create React App default ports
+    allow_origins=[
+        "http://localhost:5173", 
+        "http://localhost:3000",
+        "http://34.134.92.145:5173",  # Add your VM's IP
+        "http://34.134.92.145:3000"  # Add your VM's IP],  # Vite and Create React App default ports
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
