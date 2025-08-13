@@ -21,8 +21,8 @@ const ClassifyImage = () => {
     setError(null)
 
     try {
-    //   const response = await fetch('http://localhost:8000/classify', {
-    const response = await fetch('http://34.134.92.145:8000/classify', {
+      const response = await fetch('http://localhost:8000/classify', {
+    // const response = await fetch('http://34.134.92.145:8000/classify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

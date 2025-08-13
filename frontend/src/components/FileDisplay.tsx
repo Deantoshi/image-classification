@@ -26,8 +26,8 @@ const FileDisplay = () => {
     setError(null)
     
     try {
-    //   const response = await fetch('http://localhost:8000/output/files')
-    const response = await fetch('http://34.134.92.145:8000/output/files')
+      const response = await fetch('http://localhost:8000/output/files')
+    // const response = await fetch('http://34.134.92.145:8000/output/files')
       
       if (response.ok) {
         const result = await response.json()
@@ -46,8 +46,8 @@ const FileDisplay = () => {
 
   const fetchCSVContent = async (filename: string) => {
     try {
-    //   const response = await fetch(`http://localhost:8000/output/csv/${filename}`)
-    const response = await fetch(`http://34.134.92.145:8000/output/csv/${filename}`)
+      const response = await fetch(`http://localhost:8000/output/csv/${filename}`)
+    // const response = await fetch(`http://34.134.92.145:8000/output/csv/${filename}`)
       
       if (response.ok) {
         const csvContent = await response.json()
@@ -180,8 +180,8 @@ const FileDisplay = () => {
     return (
       <div style={{ marginTop: '16px', textAlign: 'center' }}>
         <img 
-        //   src={`http://localhost:8000/output/file/${filename}`}
-        src={`http://34.134.92.145:8000/output/file/${filename}`}
+          src={`http://localhost:8000/output/file/${filename}`}
+        // src={`http://34.134.92.145:8000/output/file/${filename}`}
           alt={filename}
           style={{ 
             maxWidth: '100%', 
@@ -354,8 +354,8 @@ const FileDisplay = () => {
                       textAlign: 'center'
                     }}>
                       <a 
-                        // href={`http://localhost:8000/output/file/${file.filename}`}
-                        href={`http://34.134.92.145:8000/output/file/${file.filename}`}
+                        href={`http://localhost:8000/output/file/${file.filename}`}
+                        // href={`http://34.134.92.145:8000/output/file/${file.filename}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ 

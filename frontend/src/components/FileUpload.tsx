@@ -34,8 +34,8 @@ const FileUpload = () => {
         formData.append('files', selectedFiles[i])
       }
 
-    //   const response = await fetch('http://localhost:8000/upload', {
-    const response = await fetch('http://34.134.92.145:8000/upload', {
+      const response = await fetch('http://localhost:8000/upload', {
+    // const response = await fetch('http://34.134.92.145:8000/upload', {
         method: 'POST',
         body: formData,
       })
@@ -60,8 +60,8 @@ const FileUpload = () => {
     setClearing(true)
     
     try {
-    //   const response = await fetch('http://localhost:8000/clear-all', {
-    const response = await fetch('http://34.134.92.145:8000/clear-all', {
+      const response = await fetch('http://localhost:8000/clear-all', {
+    // const response = await fetch('http://34.134.92.145:8000/clear-all', {
         method: 'DELETE',
       })
 
