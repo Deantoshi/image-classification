@@ -88,28 +88,50 @@ const FileDisplay = () => {
 
   const renderCSVTable = (filename: string) => {
     const csv = csvData[filename]
-    if (!csv) return <div>Loading CSV content...</div>
+    if (!csv) return (
+      <div style={{ 
+        padding: '20px', 
+        textAlign: 'center',
+        color: '#9ca3af',
+        fontStyle: 'italic'
+      }}>
+        Loading CSV content...
+      </div>
+    )
 
     if (csv.headers.length === 0) {
-      return <div style={{ padding: '10px', fontStyle: 'italic' }}>CSV file is empty</div>
+      return (
+        <div style={{ 
+          padding: '20px', 
+          fontStyle: 'italic',
+          color: '#9ca3af',
+          textAlign: 'center'
+        }}>
+          CSV file is empty
+        </div>
+      )
     }
 
     return (
-      <div style={{ marginTop: '10px', overflowX: 'auto' }}>
+      <div style={{ marginTop: '16px', overflowX: 'auto' }}>
         <table style={{ 
           width: '100%', 
           borderCollapse: 'collapse', 
-          fontSize: '14px',
-          backgroundColor: 'white'
+          fontSize: '0.9rem',
+          background: 'rgba(17, 24, 39, 0.6)',
+          borderRadius: '8px',
+          overflow: 'hidden'
         }}>
           <thead>
-            <tr style={{ backgroundColor: '#f8f9fa' }}>
+            <tr style={{ background: 'rgba(75, 85, 99, 0.4)' }}>
               {csv.headers.map((header, index) => (
                 <th key={index} style={{ 
-                  border: '1px solid #dee2e6', 
-                  padding: '8px', 
+                  border: '1px solid rgba(75, 85, 99, 0.3)', 
+                  padding: '12px', 
                   textAlign: 'left',
-                  fontWeight: 'bold'
+                  fontWeight: '600',
+                  color: '#e0e6ed',
+                  fontSize: '0.95rem'
                 }}>
                   {header}
                 </th>
@@ -119,12 +141,15 @@ const FileDisplay = () => {
           <tbody>
             {csv.data.slice(0, 100).map((row, rowIndex) => (
               <tr key={rowIndex} style={{ 
-                backgroundColor: rowIndex % 2 === 0 ? 'white' : '#f8f9fa'
+                background: rowIndex % 2 === 0 
+                  ? 'rgba(17, 24, 39, 0.4)' 
+                  : 'rgba(30, 41, 59, 0.4)'
               }}>
                 {row.map((cell, cellIndex) => (
                   <td key={cellIndex} style={{ 
-                    border: '1px solid #dee2e6', 
-                    padding: '8px'
+                    border: '1px solid rgba(75, 85, 99, 0.2)', 
+                    padding: '10px',
+                    color: '#d1d5db'
                   }}>
                     {cell}
                   </td>
@@ -135,10 +160,12 @@ const FileDisplay = () => {
         </table>
         {csv.data.length > 100 && (
           <div style={{ 
-            padding: '10px', 
+            padding: '16px', 
             textAlign: 'center', 
             fontStyle: 'italic', 
-            color: '#666'
+            color: '#9ca3af',
+            background: 'rgba(17, 24, 39, 0.4)',
+            borderRadius: '0 0 8px 8px'
           }}>
             Showing first 100 rows of {csv.row_count} total rows
           </div>
@@ -149,41 +176,86 @@ const FileDisplay = () => {
 
   const renderImage = (filename: string) => {
     return (
-      <div style={{ marginTop: '10px', textAlign: 'center' }}>
+      <div style={{ marginTop: '16px', textAlign: 'center' }}>
         <img 
           src={`http://localhost:8000/output/file/${filename}`}
           alt={filename}
           style={{ 
             maxWidth: '100%', 
-            maxHeight: '500px', 
-            border: '1px solid #ddd',
-            borderRadius: '4px'
+            maxHeight: '600px', 
+            border: '2px solid rgba(75, 85, 99, 0.3)',
+            borderRadius: '8px',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
           }}
           onError={(e) => {
             e.currentTarget.style.display = 'none'
             e.currentTarget.nextElementSibling!.textContent = 'Failed to load image'
+            ;(e.currentTarget.nextElementSibling as HTMLElement).style.display = 'block'
           }}
         />
-        <div style={{ display: 'none', color: '#666', marginTop: '10px' }}></div>
+        <div style={{ 
+          display: 'none', 
+          color: '#ef4444', 
+          marginTop: '16px',
+          fontStyle: 'italic'
+        }}></div>
       </div>
     )
   }
 
   return (
-    <div className="card" style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', marginTop: '20px' }}>
-      <div style={{ marginBottom: '15px' }}>
-        <h3 style={{ margin: '0 0 10px 0' }}>📁 Output Files</h3>
+    <div className="card" style={{ 
+      padding: '25px', 
+      background: 'rgba(30, 30, 46, 0.8)',
+      border: '1px solid rgba(75, 85, 99, 0.3)', 
+      borderRadius: '12px', 
+      marginTop: '20px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+      backdropFilter: 'blur(10px)'
+    }}>
+      <div style={{ marginBottom: '20px' }}>
+        <h3 style={{ 
+          margin: '0 0 15px 0', 
+          color: '#e0e6ed',
+          fontSize: '1.4rem',
+          fontWeight: '600',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          📁 Output Files
+        </h3>
         <button 
           onClick={fetchOutputFiles}
           disabled={loading}
           style={{
-            padding: '10px 20px',
-            backgroundColor: loading ? '#ccc' : '#28a745',
-            color: 'white',
+            padding: '12px 24px',
+            background: loading 
+              ? 'rgba(75, 85, 99, 0.5)' 
+              : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            color: '#ffffff',
             border: 'none',
-            borderRadius: '4px',
+            borderRadius: '8px',
             cursor: loading ? 'not-allowed' : 'pointer',
-            fontWeight: 'bold'
+            fontWeight: '600',
+            fontSize: '1rem',
+            transition: 'all 0.3s ease',
+            boxShadow: loading 
+              ? 'none' 
+              : '0 4px 16px rgba(16, 185, 129, 0.3)',
+            transform: loading ? 'none' : 'translateY(0)',
+          }}
+          onMouseEnter={(e) => {
+            if (!loading) {
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.4)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!loading) {
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.3)'
+            }
           }}
         >
           {loading ? '⏳ Loading...' : '👁️ View Output'}
@@ -192,74 +264,108 @@ const FileDisplay = () => {
 
       {error && (
         <div style={{ 
-          marginTop: '15px', 
-          padding: '15px', 
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          borderRadius: '4px',
-          border: '1px solid #f5c6cb'
+          marginTop: '20px', 
+          padding: '16px', 
+          background: 'rgba(239, 68, 68, 0.15)',
+          color: '#ef4444',
+          borderRadius: '8px',
+          border: '1px solid rgba(239, 68, 68, 0.3)'
         }}>
           ❌ {error}
         </div>
       )}
 
       {files.length > 0 && (
-        <div style={{ marginTop: '15px' }}>
+        <div style={{ marginTop: '20px' }}>
           <div style={{ 
-            marginBottom: '10px', 
-            fontSize: '14px', 
-            color: '#666' 
+            marginBottom: '16px', 
+            fontSize: '0.95rem', 
+            color: '#9ca3af',
+            fontWeight: '500'
           }}>
             Found {files.length} output file{files.length !== 1 ? 's' : ''}
           </div>
           
           {files.map((file, index) => (
             <div key={index} style={{ 
-              marginBottom: '10px', 
-              border: '1px solid #e9ecef', 
-              borderRadius: '4px',
-              backgroundColor: '#f8f9fa'
+              marginBottom: '12px', 
+              border: '1px solid rgba(75, 85, 99, 0.3)', 
+              borderRadius: '8px',
+              background: 'rgba(17, 24, 39, 0.6)',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease'
             }}>
               <div 
                 style={{ 
-                  padding: '12px', 
+                  padding: '16px', 
                   cursor: 'pointer',
                   display: 'flex',
                   justifyContent: 'space-between',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  transition: 'background 0.2s ease'
                 }}
                 onClick={() => toggleFileExpansion(file.filename, file.type)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(75, 85, 99, 0.2)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent'
+                }}
               >
                 <div>
-                  <span style={{ fontWeight: 'bold' }}>
+                  <span style={{ 
+                    fontWeight: '600',
+                    color: '#e0e6ed',
+                    fontSize: '1rem'
+                  }}>
                     {file.type === 'csv' ? '📊' : file.type === 'image' ? '🖼️' : '📄'} {file.filename}
                   </span>
-                  <span style={{ marginLeft: '10px', color: '#666', fontSize: '14px' }}>
+                  <span style={{ 
+                    marginLeft: '12px', 
+                    color: '#9ca3af', 
+                    fontSize: '0.9rem' 
+                  }}>
                     ({formatFileSize(file.size)})
                   </span>
                 </div>
-                <span style={{ fontSize: '18px' }}>
-                  {expandedFiles.has(file.filename) ? '▼' : '▶️'}
+                <span style={{ 
+                  fontSize: '1.2rem',
+                  color: '#9ca3af',
+                  transition: 'transform 0.2s ease',
+                  transform: expandedFiles.has(file.filename) ? 'rotate(90deg)' : 'rotate(0deg)'
+                }}>
+                  ▶️
                 </span>
               </div>
               
               {expandedFiles.has(file.filename) && (
                 <div style={{ 
-                  borderTop: '1px solid #e9ecef', 
-                  backgroundColor: 'white'
+                  borderTop: '1px solid rgba(75, 85, 99, 0.3)', 
+                  background: 'rgba(17, 24, 39, 0.8)'
                 }}>
                   {file.type === 'csv' && renderCSVTable(file.filename)}
                   {file.type === 'image' && renderImage(file.filename)}
                   {file.type === 'other' && (
-                    <div style={{ padding: '15px', textAlign: 'center', color: '#666' }}>
+                    <div style={{ 
+                      padding: '20px', 
+                      textAlign: 'center'
+                    }}>
                       <a 
                         href={`http://localhost:8000/output/file/${file.filename}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ 
-                          color: '#007bff', 
+                          color: '#3b82f6', 
                           textDecoration: 'none',
-                          fontWeight: 'bold'
+                          fontWeight: '600',
+                          fontSize: '1rem',
+                          transition: 'color 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = '#60a5fa'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = '#3b82f6'
                         }}
                       >
                         📥 Download {file.filename}
@@ -275,15 +381,20 @@ const FileDisplay = () => {
 
       {!loading && files.length === 0 && !error && (
         <div style={{ 
-          marginTop: '15px', 
-          padding: '15px', 
-          backgroundColor: '#fff3cd',
-          color: '#856404',
-          borderRadius: '4px',
-          border: '1px solid #ffeaa7',
+          marginTop: '20px', 
+          padding: '20px', 
+          background: 'rgba(245, 158, 11, 0.15)',
+          color: '#f59e0b',
+          borderRadius: '8px',
+          border: '1px solid rgba(245, 158, 11, 0.3)',
           textAlign: 'center'
         }}>
-          📂 No output files found. Run your ML processing script to generate results.
+          <div style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '8px' }}>
+            📂 No output files found
+          </div>
+          <div style={{ fontSize: '0.9rem', color: '#d97706' }}>
+            Run your ML processing script to generate results.
+          </div>
         </div>
       )}
     </div>

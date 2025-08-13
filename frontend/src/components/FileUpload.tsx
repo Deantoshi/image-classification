@@ -66,9 +66,34 @@ const FileUpload = () => {
   }
 
   return (
-    <div className="card" style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', marginTop: '20px' }}>
-      <div style={{ marginBottom: '15px' }}>
-        <label htmlFor="file-input" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
+    <div className="card" style={{ 
+      padding: '25px', 
+      background: 'rgba(30, 30, 46, 0.8)',
+      border: '1px solid rgba(75, 85, 99, 0.3)', 
+      borderRadius: '12px', 
+      marginTop: '20px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+      backdropFilter: 'blur(10px)'
+    }}>
+      <div style={{ marginBottom: '20px' }}>
+        <h3 style={{ 
+          margin: '0 0 15px 0', 
+          color: '#e0e6ed',
+          fontSize: '1.4rem',
+          fontWeight: '600',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          📁 Upload Images
+        </h3>
+        <label htmlFor="file-input" style={{ 
+          display: 'block', 
+          marginBottom: '15px', 
+          fontWeight: '500',
+          color: '#9ca3af',
+          fontSize: '1rem'
+        }}>
           Select Images:
         </label>
         <input
@@ -79,38 +104,85 @@ const FileUpload = () => {
           onChange={handleFileSelect}
           disabled={uploading}
           style={{ 
-            padding: '10px', 
-            border: '1px solid #ddd', 
-            borderRadius: '4px',
+            padding: '12px 16px', 
+            background: 'rgba(17, 24, 39, 0.8)',
+            border: '2px solid rgba(75, 85, 99, 0.3)', 
+            borderRadius: '8px',
             width: '100%',
-            maxWidth: '400px'
+            maxWidth: '500px',
+            color: '#e0e6ed',
+            fontSize: '1rem',
+            transition: 'all 0.3s ease',
+            cursor: uploading ? 'not-allowed' : 'pointer'
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'rgba(139, 92, 246, 0.6)'
+            e.target.style.boxShadow = '0 0 0 3px rgba(139, 92, 246, 0.1)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(75, 85, 99, 0.3)'
+            e.target.style.boxShadow = 'none'
           }}
         />
       </div>
 
       {selectedFiles && selectedFiles.length > 0 && (
-        <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
-          <strong>Selected files ({selectedFiles.length}):</strong>
-          <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+        <div style={{ 
+          marginBottom: '20px', 
+          padding: '16px', 
+          background: 'rgba(17, 24, 39, 0.6)', 
+          borderRadius: '8px',
+          border: '1px solid rgba(75, 85, 99, 0.2)'
+        }}>
+          <strong style={{ color: '#e0e6ed' }}>
+            Selected files ({selectedFiles.length}):
+          </strong>
+          <ul style={{ 
+            margin: '10px 0 0 0', 
+            paddingLeft: '20px',
+            color: '#9ca3af'
+          }}>
             {Array.from(selectedFiles).map((file, index) => (
-              <li key={index}>{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)</li>
+              <li key={index} style={{ marginBottom: '4px' }}>
+                {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+              </li>
             ))}
           </ul>
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '15px', flexWrap: 'wrap' }}>
         <button 
           onClick={handleUpload} 
           disabled={!selectedFiles || uploading}
           style={{
-            padding: '10px 20px',
-            backgroundColor: uploading ? '#ccc' : '#007bff',
-            color: 'white',
+            padding: '12px 24px',
+            background: uploading 
+              ? 'rgba(75, 85, 99, 0.5)' 
+              : 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+            color: '#ffffff',
             border: 'none',
-            borderRadius: '4px',
+            borderRadius: '8px',
             cursor: uploading ? 'not-allowed' : 'pointer',
-            fontWeight: 'bold'
+            fontWeight: '600',
+            fontSize: '1rem',
+            transition: 'all 0.3s ease',
+            boxShadow: uploading 
+              ? 'none' 
+              : '0 4px 16px rgba(139, 92, 246, 0.3)',
+            transform: uploading ? 'none' : 'translateY(0)',
+          }}
+          onMouseEnter={(e) => {
+            if (!uploading) {
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(139, 92, 246, 0.4)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!uploading) {
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 92, 246, 0.3)'
+            }
           }}
         >
           {uploading ? '⏳ Uploading...' : '📤 Upload Images'}
@@ -120,12 +192,25 @@ const FileUpload = () => {
           onClick={clearFiles}
           disabled={uploading}
           style={{
-            padding: '10px 20px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: uploading ? 'not-allowed' : 'pointer'
+            padding: '12px 24px',
+            background: 'rgba(75, 85, 99, 0.6)',
+            color: '#e0e6ed',
+            border: '1px solid rgba(75, 85, 99, 0.4)',
+            borderRadius: '8px',
+            cursor: uploading ? 'not-allowed' : 'pointer',
+            fontWeight: '500',
+            fontSize: '1rem',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            if (!uploading) {
+              e.currentTarget.style.background = 'rgba(75, 85, 99, 0.8)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!uploading) {
+              e.currentTarget.style.background = 'rgba(75, 85, 99, 0.6)'
+            }
           }}
         >
           🗑️ Clear
@@ -134,12 +219,16 @@ const FileUpload = () => {
 
       {uploadResult && (
         <div style={{ 
-          marginTop: '15px', 
-          padding: '15px', 
-          backgroundColor: uploadResult.startsWith('✅') ? '#d4edda' : '#f8d7da',
-          color: uploadResult.startsWith('✅') ? '#155724' : '#721c24',
-          borderRadius: '4px',
-          border: `1px solid ${uploadResult.startsWith('✅') ? '#c3e6cb' : '#f5c6cb'}`
+          marginTop: '20px', 
+          padding: '16px', 
+          background: uploadResult.startsWith('✅') 
+            ? 'rgba(16, 185, 129, 0.15)' 
+            : 'rgba(239, 68, 68, 0.15)',
+          color: uploadResult.startsWith('✅') ? '#10b981' : '#ef4444',
+          borderRadius: '8px',
+          border: `1px solid ${uploadResult.startsWith('✅') 
+            ? 'rgba(16, 185, 129, 0.3)' 
+            : 'rgba(239, 68, 68, 0.3)'}`
         }}>
           {uploadResult}
         </div>
@@ -147,19 +236,28 @@ const FileUpload = () => {
 
       {uploadedFiles.length > 0 && (
         <div style={{ 
-          marginTop: '15px', 
-          padding: '15px', 
-          backgroundColor: '#e7f3ff',
-          borderRadius: '4px',
-          border: '1px solid #b8daff'
+          marginTop: '20px', 
+          padding: '16px', 
+          background: 'rgba(59, 130, 246, 0.15)',
+          borderRadius: '8px',
+          border: '1px solid rgba(59, 130, 246, 0.3)'
         }}>
-          <strong>📁 Uploaded files ready for processing:</strong>
-          <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+          <strong style={{ color: '#3b82f6' }}>📁 Uploaded files ready for processing:</strong>
+          <ul style={{ 
+            margin: '10px 0 0 0', 
+            paddingLeft: '20px',
+            color: '#9ca3af'
+          }}>
             {uploadedFiles.map((filename, index) => (
-              <li key={index}>{filename}</li>
+              <li key={index} style={{ marginBottom: '4px' }}>{filename}</li>
             ))}
           </ul>
-          <p style={{ margin: '10px 0 0 0', fontSize: '14px', color: '#666' }}>
+          <p style={{ 
+            margin: '12px 0 0 0', 
+            fontSize: '0.9rem', 
+            color: '#6b7280',
+            fontStyle: 'italic'
+          }}>
             💡 Files are now in the backend/input folder and ready for ML processing.
           </p>
         </div>
