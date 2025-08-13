@@ -65,8 +65,8 @@ FUDGE_FACTOR = 1.5          # Adjusts area in weight calculation
 def check_cuda():
     """Checks CUDA availability and prints status."""
     if torch.cuda.is_available():
-        print('CUDA is available. Using GPU.')
-        return "cuda"
+        print('CUDA is available. But Using CPU.')
+        return "cpu"
     else:
         print('CUDA is not available. Processing will use CPU and may be slow.')
         return "cpu"
