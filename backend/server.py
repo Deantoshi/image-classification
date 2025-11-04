@@ -11,6 +11,7 @@ from database import init_db
 from routes.user_routes import router as user_router
 from routes.image_routes import router as image_router
 from routes.user_analysis_routes import router as user_analysis_router
+from routes.admin_routes import router as admin_router
 
 app = FastAPI()
 
@@ -35,6 +36,7 @@ app.add_middleware(
 app.include_router(user_router, prefix="/api", tags=["users"])
 app.include_router(image_router, prefix="/api", tags=["images"])
 app.include_router(user_analysis_router, prefix="/api", tags=["user-analysis"])
+app.include_router(admin_router, prefix="/api", tags=["admin"])
 
 # Ensure the input and output directories exist
 INPUT_DIR = "input"

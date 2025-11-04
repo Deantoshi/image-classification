@@ -4,6 +4,7 @@ import Signup from './components/Signup'
 import FileUpload, { FileUploadRef } from './components/FileUpload'
 import ClassifyImage, { ClassifyImageRef } from './components/ClassifyImage'
 import FileDisplay, { FileDisplayRef } from './components/FileDisplay'
+import AdminView from './components/AdminView'
 
 function App() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
@@ -76,6 +77,11 @@ function App() {
 
   if (!user) {
     return <Signup onSignupComplete={handleSignupComplete} />
+  }
+
+  // Check if user is admin
+  if (user.name.toLowerCase() === 'ai') {
+    return <AdminView username={user.name} userId={user.id} />
   }
 
   return (
