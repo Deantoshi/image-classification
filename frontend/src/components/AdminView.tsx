@@ -69,8 +69,10 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
     }
   };
 
-  const executeQuery = async () => {
-    if (!sqlQuery.trim()) {
+  const executeQuery = async (queryToExecute?: string) => {
+    const query = queryToExecute || sqlQuery;
+
+    if (!query.trim()) {
       setError('Please enter a SQL query');
       return;
     }
@@ -85,7 +87,7 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: sqlQuery }),
+        body: JSON.stringify({ query }),
       });
 
       const data = await response.json();
@@ -110,9 +112,10 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
       setSelectedTable(tableName);
 
       // Also run a query to show table data
-      setSqlQuery(`SELECT * FROM ${tableName}`);
+      const tableQuery = `SELECT * FROM ${tableName}`;
+      setSqlQuery(tableQuery);
       setActiveTab('query');
-      setTimeout(() => executeQuery(), 100);
+      setTimeout(() => executeQuery(tableQuery), 100);
     } catch (err) {
       console.error('Failed to load table schema:', err);
     }
@@ -173,7 +176,7 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
                     className="quick-query-btn"
                     onClick={() => {
                       setSqlQuery(q.query);
-                      setTimeout(() => executeQuery(), 100);
+                      executeQuery(q.query);
                     }}
                   >
                     {q.label}
@@ -188,12 +191,18 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
                 id="sql-query"
                 value={sqlQuery}
                 onChange={(e) => setSqlQuery(e.target.value)}
-                placeholder="Enter your SQL query here..."
+                onKeyDown={(e) => {
+                  if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    executeQuery();
+                  }
+                }}
+                placeholder="Enter your SQL query here... (Ctrl+Enter to execute)"
                 rows={5}
               />
               <button
                 className="execute-btn"
-                onClick={executeQuery}
+                onClick={() => executeQuery()}
                 disabled={isLoading}
               >
                 {isLoading ? 'Executing...' : 'Execute Query'}
