@@ -64,7 +64,7 @@ function Signup({ onSignupComplete }: SignupProps) {
           <img src={monsterTruckSweetPotato} alt="Monster truck sweet potato" />
         </div>
 
-        <h1 className="signup-title">Welcome to the Harvest</h1>
+        <h1 className="signup-title">Welcome to the BAE!</h1>
         <p className="signup-subtitle">Enter your name to begin</p>
 
         <form onSubmit={handleSubmit} className="signup-form">
@@ -77,7 +77,7 @@ function Signup({ onSignupComplete }: SignupProps) {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
+              placeholder="Enter your name here"
               className="username-input"
               disabled={isLoading || existingUser !== null}
             />
@@ -112,7 +112,7 @@ function Signup({ onSignupComplete }: SignupProps) {
               ) : (
                 <>
                   <span className="button-icon">🚜</span>
-                  Continue to Farm
+                  Begin Image Classification
                 </>
               )}
             </button>
@@ -131,9 +131,9 @@ function Signup({ onSignupComplete }: SignupProps) {
         </form>
 
         <div className="farm-footer">
-          <span className="footer-icon">🌻</span>
-          <span className="footer-text">Grain & Farm Image Processor</span>
-          <span className="footer-icon">🌻</span>
+          <span className="footer-icon">🍠</span>
+          <span className="footer-text">Sweet Potato Image Processor</span>
+          <span className="footer-icon">🍠</span>
         </div>
       </div>
     </div>
