@@ -6,7 +6,7 @@ import os
 
 # Add parent directory to path to import user_analysis_service
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from user_analysis_service import add_analysis, get_user_analyses
+from services.user_analysis_service import add_analysis, get_user_analyses, get_all_analyses
 
 router = APIRouter()
 
@@ -137,3 +137,46 @@ async def get_user_analyses_endpoint(request: GetUserAnalysesRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get user analyses: {str(e)}")
+
+
+@router.get("/get-all-user-analyses")
+async def get_all_user_analyses_endpoint():
+    """
+    Get all analysis records from the user_analysis table.
+    """
+    try:
+        analyses = get_all_analyses()
+
+        # Convert tuple results to dictionaries
+        analysis_list = []
+        for analysis in analyses:
+            analysis_list.append({
+                "object_id": analysis[0],
+                "image_name": analysis[1],
+                "object_id_in_image": analysis[2],
+                "area_px2": analysis[3],
+                "top_left_x": analysis[4],
+                "top_left_y": analysis[5],
+                "bottom_right_x": analysis[6],
+                "bottom_right_y": analysis[7],
+                "center": analysis[8],
+                "width_px": analysis[9],
+                "length_px": analysis[10],
+                "volume_px3": analysis[11],
+                "solidity": analysis[12],
+                "strict_solidity": analysis[13],
+                "lw_ratio": analysis[14],
+                "area_in2": analysis[15],
+                "weight_oz": analysis[16],
+                "grade": analysis[17],
+                "user_id": analysis[18]
+            })
+
+        return {
+            "analyses": analysis_list,
+            "count": len(analysis_list),
+            "status": "success"
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get all user analyses: {str(e)}")
