@@ -20,6 +20,13 @@ const FileUpload = () => {
     setUploadedFiles([])
   }
 
+  const triggerFileInput = () => {
+    const fileInput = document.getElementById('file-input') as HTMLInputElement
+    if (fileInput && !uploading && !clearing) {
+      fileInput.click()
+    }
+  }
+
   const handleUpload = async () => {
     if (!selectedFiles || selectedFiles.length === 0) {
       alert('Please select files to upload')
@@ -92,22 +99,32 @@ const FileUpload = () => {
 
   return (
     <div className="file-upload-card">
-      <div className="upload-header">
-        <h3 className="upload-title">
-          📁 Upload Images
-        </h3>
-        <label htmlFor="file-input" className="upload-label">
-          Select Images:
-        </label>
-        <input
-          id="file-input"
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleFileSelect}
-          disabled={uploading || clearing}
-          className="file-input"
-        />
+      {/* Hidden file input */}
+      <input
+        id="file-input"
+        type="file"
+        multiple
+        accept="image/*"
+        onChange={handleFileSelect}
+        disabled={uploading || clearing}
+        className="file-input-hidden"
+      />
+
+      {/* Plus sign upload area */}
+      <div
+        className={`upload-trigger ${(uploading || clearing) ? 'disabled' : ''}`}
+        onClick={triggerFileInput}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            triggerFileInput()
+          }
+        }}
+      >
+        <div className="plus-icon">+</div>
+        <div className="upload-trigger-text">Add Images</div>
       </div>
 
       {selectedFiles && selectedFiles.length > 0 && (
@@ -131,7 +148,7 @@ const FileUpload = () => {
           disabled={!selectedFiles || uploading || clearing}
           className="upload-button"
         >
-          {uploading ? '⏳ Uploading...' : '📤 Upload Images'}
+          {uploading ? '⏳ Uploading...' : '📤 Send Images to Server'}
         </button>
 
         <button
