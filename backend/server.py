@@ -10,6 +10,7 @@ import mimetypes
 from database import init_db
 from routes.user_routes import router as user_router
 from routes.image_routes import router as image_router
+from routes.user_analysis_routes import router as user_analysis_router
 
 app = FastAPI()
 
@@ -33,6 +34,7 @@ app.add_middleware(
 # Include routers
 app.include_router(user_router, prefix="/api", tags=["users"])
 app.include_router(image_router, prefix="/api", tags=["images"])
+app.include_router(user_analysis_router, prefix="/api", tags=["user-analysis"])
 
 # Ensure the input and output directories exist
 INPUT_DIR = "input"

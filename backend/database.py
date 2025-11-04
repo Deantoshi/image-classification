@@ -35,6 +35,32 @@ def init_db():
         )
     ''')
 
+    # Create user_analysis table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS user_analysis (
+            object_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image_name TEXT NOT NULL,
+            object_id_in_image INTEGER,
+            area_px2 REAL,
+            top_left_x INTEGER,
+            top_left_y INTEGER,
+            bottom_right_x INTEGER,
+            bottom_right_y INTEGER,
+            center TEXT,
+            width_px REAL,
+            length_px REAL,
+            volume_px3 REAL,
+            solidity REAL,
+            strict_solidity REAL,
+            lw_ratio REAL,
+            area_in2 REAL,
+            weight_oz REAL,
+            grade TEXT,
+            user_id INTEGER,
+            FOREIGN KEY (user_id) REFERENCES user (id)
+        )
+    ''')
+
     conn.commit()
     conn.close()
 
