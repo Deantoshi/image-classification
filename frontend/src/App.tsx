@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import Signup from './components/Signup'
 import FileUpload from './components/FileUpload'
-import ClassifyImage from './components/ClassifyImage'
+import ClassifyImage, { ClassifyImageRef } from './components/ClassifyImage'
 import FileDisplay from './components/FileDisplay'
 
 function App() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
+  const classifyImageRef = useRef<ClassifyImageRef>(null)
+  const classifyImageSectionRef = useRef<HTMLDivElement>(null)
 
   // Check localStorage for existing user on mount
   useEffect(() => {
@@ -29,6 +31,21 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('user')
     setUser(null)
+  }
+
+  const handleUploadComplete = () => {
+    // Trigger classification automatically
+    if (classifyImageRef.current) {
+      classifyImageRef.current.classify()
+    }
+
+    // Scroll to the ClassifyImage section
+    if (classifyImageSectionRef.current) {
+      classifyImageSectionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
   }
 
   if (!user) {
@@ -54,9 +71,11 @@ function App() {
           </button>
         </div>
 
-        <FileUpload />
+        <FileUpload onUploadComplete={handleUploadComplete} />
 
-        <ClassifyImage />
+        <div ref={classifyImageSectionRef}>
+          <ClassifyImage ref={classifyImageRef} />
+        </div>
 
         <FileDisplay />
 
