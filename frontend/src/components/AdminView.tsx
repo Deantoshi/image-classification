@@ -27,9 +27,10 @@ interface ImageInfo {
 interface AdminViewProps {
   username: string;
   userId: number;
+  onLogout: () => void;
 }
 
-function AdminView({ username, userId }: AdminViewProps) {
+function AdminView({ username, userId, onLogout }: AdminViewProps) {
   const [activeTab, setActiveTab] = useState<'query' | 'tables' | 'images'>('query');
   const [sqlQuery, setSqlQuery] = useState('SELECT * FROM user');
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
@@ -133,6 +134,9 @@ function AdminView({ username, userId }: AdminViewProps) {
         <div className="admin-info">
           <span className="admin-badge">ADMIN</span>
           <span className="user-info">Logged in as: {username} (ID: {userId})</span>
+          <button className="admin-logout-btn" onClick={onLogout}>
+            Logout
+          </button>
         </div>
       </div>
 

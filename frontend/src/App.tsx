@@ -81,7 +81,7 @@ function App() {
 
   // Check if user is admin
   if (user.name.toLowerCase() === 'ai') {
-    return <AdminView username={user.name} userId={user.id} />
+    return <AdminView username={user.name} userId={user.id} onLogout={handleLogout} />
   }
 
   return (
