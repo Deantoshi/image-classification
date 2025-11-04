@@ -60,6 +60,12 @@ export interface GetUserAnalysesResponse {
   status: string;
 }
 
+export interface GetAllUserAnalysesResponse {
+  analyses: AnalysisRecord[];
+  count: number;
+  status: string;
+}
+
 /**
  * Add a new analysis record to the database.
  * Associates analysis data with a user ID.
@@ -95,7 +101,7 @@ export const addAnalysis = async (
  */
 export const getUserAnalyses = async (user_id: number): Promise<GetUserAnalysesResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/get-user-analyses`, {
+    const response = await fetch(`${API_BASE_URL}/get-user-analyses`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -112,6 +118,32 @@ export const getUserAnalyses = async (user_id: number): Promise<GetUserAnalysesR
     return data;
   } catch (error) {
     console.error('Error calling get-user-analyses:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get all analysis records from the database.
+ * Returns a list of all analysis data for all users.
+ */
+export const getAllUserAnalyses = async (): Promise<GetAllUserAnalysesResponse> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/get-all-user-analyses`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+    }
+
+    const data: GetAllUserAnalysesResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error calling get-all-user-analyses:', error);
     throw error;
   }
 };
