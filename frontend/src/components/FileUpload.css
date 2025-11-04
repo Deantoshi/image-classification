@@ -1,0 +1,241 @@
+.file-upload-card {
+  padding: 25px;
+  background: linear-gradient(to bottom, #f5f1e8 0%, #ede4d3 100%);
+  border: 3px solid #8b6f47;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.file-upload-card:hover {
+  border-color: #d4a574;
+  box-shadow: 0 12px 40px rgba(139, 111, 71, 0.4);
+}
+
+.upload-header {
+  margin-bottom: 20px;
+}
+
+.upload-title {
+  margin: 0 0 15px 0;
+  color: #5d4e37;
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Georgia', serif;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.upload-label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 500;
+  color: #8b6f47;
+  font-size: 1rem;
+  font-family: 'Georgia', serif;
+}
+
+.file-input {
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 3px solid #a0826d;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  color: #5d4e37;
+  font-size: 1rem;
+  font-family: 'Georgia', serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.file-input:focus {
+  outline: none;
+  border-color: #d4a574;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 4px rgba(212, 165, 116, 0.2);
+}
+
+.file-input:disabled {
+  background: #f0ebe3;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.selected-files-container {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: rgba(139, 111, 71, 0.08);
+  border-radius: 8px;
+  border: 2px solid rgba(139, 111, 71, 0.2);
+}
+
+.selected-files-title {
+  color: #5d4e37;
+  font-weight: 600;
+  font-family: 'Georgia', serif;
+  margin-bottom: 10px;
+}
+
+.selected-files-list {
+  margin: 10px 0 0 0;
+  padding-left: 20px;
+  color: #8b6f47;
+  font-family: 'Georgia', serif;
+}
+
+.selected-file-item {
+  margin-bottom: 4px;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.upload-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #8b6f47 0%, #6b5437 100%);
+  color: #ffffff;
+  border: 3px solid #5d4e37;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: 'Georgia', serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(93, 78, 55, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #a0826d 0%, #8b6f47 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(93, 78, 55, 0.4);
+}
+
+.upload-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(93, 78, 55, 0.3);
+}
+
+.upload-button:disabled {
+  background: rgba(160, 130, 109, 0.5);
+  border-color: rgba(93, 78, 55, 0.5);
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.clear-button {
+  padding: 12px 24px;
+  background: rgba(139, 111, 71, 0.2);
+  color: #5d4e37;
+  border: 2px solid #a0826d;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  font-family: 'Georgia', serif;
+  transition: all 0.3s ease;
+}
+
+.clear-button:hover:not(:disabled) {
+  background: rgba(139, 111, 71, 0.35);
+  border-color: #8b6f47;
+}
+
+.clear-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.result-message {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 8px;
+  font-family: 'Georgia', serif;
+  font-weight: 500;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.result-message.success {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  color: #2e7d32;
+  border: 2px solid #81c784;
+}
+
+.result-message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 2px solid #c13636;
+}
+
+.uploaded-files-container {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(212, 165, 116, 0.15);
+  border-radius: 8px;
+  border: 2px solid rgba(212, 165, 116, 0.4);
+}
+
+.uploaded-files-title {
+  color: #5d4e37;
+  font-weight: 600;
+  font-family: 'Georgia', serif;
+  margin-bottom: 10px;
+}
+
+.uploaded-files-list {
+  margin: 10px 0 0 0;
+  padding-left: 20px;
+  color: #8b6f47;
+  font-family: 'Georgia', serif;
+}
+
+.uploaded-file-item {
+  margin-bottom: 4px;
+}
+
+.uploaded-files-info {
+  margin: 12px 0 0 0;
+  font-size: 0.9rem;
+  color: #a0826d;
+  font-style: italic;
+  font-family: 'Georgia', serif;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .file-upload-card {
+    padding: 20px 15px;
+  }
+
+  .upload-title {
+    font-size: 1.2rem;
+  }
+
+  .upload-button,
+  .clear-button {
+    font-size: 0.9rem;
+    padding: 10px 18px;
+  }
+}
