@@ -161,7 +161,10 @@ async def get_output_file(filename: str):
         return FileResponse(
             path=file_path,
             media_type=media_type,
-            filename=filename
+            filename=filename,
+            headers={
+                "Content-Disposition": f"attachment; filename={filename}"
+            }
         )
     
     except HTTPException:

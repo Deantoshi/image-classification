@@ -72,16 +72,14 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
   const downloadAllImages = async () => {
     for (const image of images) {
       try {
-        const response = await fetch(`${API_BASE_URL}${image.url}`);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        // Create a temporary anchor element and trigger download
         const a = document.createElement('a');
-        a.href = url;
+        a.href = `${API_BASE_URL}${image.url}`;
         a.download = image.filename;
+        a.target = '_blank'; // Fallback if download doesn't work
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
         // Small delay between downloads to avoid browser blocking
         await new Promise(resolve => setTimeout(resolve, 500));
       } catch (err) {
