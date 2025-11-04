@@ -46,7 +46,30 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
   }, [selectedFiles])
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFiles(event.target.files)
+    const newFiles = event.target.files
+    if (!newFiles || newFiles.length === 0) return
+
+    // If there are already selected files, merge them with the new ones
+    if (selectedFiles && selectedFiles.length > 0) {
+      const existingFilesArray = Array.from(selectedFiles)
+      const newFilesArray = Array.from(newFiles)
+      const combinedFiles = [...existingFilesArray, ...newFilesArray]
+
+      // Create a new DataTransfer object to update the file input
+      const dataTransfer = new DataTransfer()
+      combinedFiles.forEach(file => dataTransfer.items.add(file))
+
+      const fileInput = document.getElementById('file-input') as HTMLInputElement
+      if (fileInput) {
+        fileInput.files = dataTransfer.files
+      }
+
+      setSelectedFiles(dataTransfer.files)
+    } else {
+      // No existing files, just set the new ones
+      setSelectedFiles(newFiles)
+    }
+
     setUploadResult(null)
     setUploadedFiles([])
   }
