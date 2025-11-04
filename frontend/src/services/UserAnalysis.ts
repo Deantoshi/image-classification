@@ -115,6 +115,11 @@ export const getUserAnalyses = async (user_id: number): Promise<GetUserAnalysesR
     }
 
     const data: GetUserAnalysesResponse = await response.json();
+    // Add 1 to object_id_in_image to match 1-based indexing in classified images
+    data.analyses = data.analyses.map(analysis => ({
+      ...analysis,
+      object_id_in_image: analysis.object_id_in_image + 1
+    }));
     return data;
   } catch (error) {
     console.error('Error calling get-user-analyses:', error);
@@ -141,6 +146,11 @@ export const getAllUserAnalyses = async (): Promise<GetAllUserAnalysesResponse> 
     }
 
     const data: GetAllUserAnalysesResponse = await response.json();
+    // Add 1 to object_id_in_image to match 1-based indexing in classified images
+    data.analyses = data.analyses.map(analysis => ({
+      ...analysis,
+      object_id_in_image: analysis.object_id_in_image + 1
+    }));
     return data;
   } catch (error) {
     console.error('Error calling get-all-user-analyses:', error);
