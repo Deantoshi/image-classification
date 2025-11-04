@@ -35,6 +35,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
   const [userAnalyses, setUserAnalyses] = useState<AnalysisRecord[]>([])
   const [loadingAnalyses, setLoadingAnalyses] = useState(false)
   const [analysesError, setAnalysesError] = useState<string | null>(null)
+  const [analysesTableExpanded, setAnalysesTableExpanded] = useState(true)
 
   // Automatically fetch output files and user analyses when component mounts or userId changes
   useEffect(() => {
@@ -62,6 +63,15 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
           userImageNames.has(file.filename)
         )
         setFiles(userFiles)
+
+        // Automatically expand all image files
+        const newExpanded = new Set(expandedFiles)
+        userFiles.forEach((file: OutputFile) => {
+          if (file.type === 'image') {
+            newExpanded.add(file.filename)
+          }
+        })
+        setExpandedFiles(newExpanded)
       } else {
         const errorData = await response.json()
         setError(`Error: ${errorData.detail}`)
@@ -345,13 +355,6 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
         <h3 className="file-display-title">
           📁 Output Files
         </h3>
-        <button
-          onClick={fetchOutputFiles}
-          disabled={loading}
-          className="view-output-button"
-        >
-          {loading ? '⏳ Loading...' : '👁️ View Output'}
-        </button>
       </div>
 
       {error && (
@@ -422,82 +425,86 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
 
       {/* User Analysis Data Section */}
       <div className="user-analyses-section">
-        <div className="file-display-header">
+        <div
+          className="file-display-header"
+          onClick={() => setAnalysesTableExpanded(!analysesTableExpanded)}
+          style={{ cursor: 'pointer' }}
+        >
           <h3 className="file-display-title">
-            📊 My Analysis Data
+            <span className={`expand-icon ${analysesTableExpanded ? 'expanded' : ''}`}>
+              ▶️
+            </span>
+            {' '}📊 My Analysis Data
           </h3>
-          <button
-            onClick={fetchUserAnalyses}
-            disabled={loadingAnalyses}
-            className="view-output-button"
-          >
-            {loadingAnalyses ? '⏳ Loading...' : '🔄 Refresh Data'}
-          </button>
         </div>
 
-        {analysesError && (
-          <div className="error-message">
-            ❌ {analysesError}
-          </div>
-        )}
+        {analysesTableExpanded && (
+          <>
+            {analysesError && (
+              <div className="error-message">
+                ❌ {analysesError}
+              </div>
+            )}
 
-        {userAnalyses.length > 0 && (
-          <div className="analyses-container">
-            <div className="files-count">
-              Found {userAnalyses.length} analysis record{userAnalyses.length !== 1 ? 's' : ''}
-            </div>
-            <div className="analyses-table-wrapper">
-              <table className="analyses-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Image</th>
-                    <th>Object #</th>
-                    <th>Area (px²)</th>
-                    <th>Width (px)</th>
-                    <th>Length (px)</th>
-                    <th>Volume (px³)</th>
-                    <th>Area (in²)</th>
-                    <th>Weight (oz)</th>
-                    <th>Grade</th>
-                    <th>L/W Ratio</th>
-                    <th>Solidity</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {userAnalyses.map((analysis) => (
-                    <tr key={analysis.object_id}>
-                      <td>{analysis.object_id}</td>
-                      <td>{analysis.image_name}</td>
-                      <td>{analysis.object_id_in_image}</td>
-                      <td>{analysis.area_px2.toFixed(2)}</td>
-                      <td>{analysis.width_px.toFixed(2)}</td>
-                      <td>{analysis.length_px.toFixed(2)}</td>
-                      <td>{analysis.volume_px3.toFixed(2)}</td>
-                      <td>{analysis.area_in2.toFixed(2)}</td>
-                      <td>{analysis.weight_oz.toFixed(2)}</td>
-                      <td className={`grade-${analysis.grade.replace(/\s+/g, '-').toLowerCase()}`}>
-                        {analysis.grade}
-                      </td>
-                      <td>{analysis.lw_ratio.toFixed(2)}</td>
-                      <td>{analysis.solidity.toFixed(3)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+            {userAnalyses.length > 0 && (
+              <div className="analyses-container">
+                <div className="files-count">
+                  Found {userAnalyses.length} analysis record{userAnalyses.length !== 1 ? 's' : ''}
+                </div>
+                <div className="analyses-table-wrapper">
+                  <table className="analyses-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Object #</th>
+                        <th>Area (px²)</th>
+                        <th>Width (px)</th>
+                        <th>Length (px)</th>
+                        <th>Volume (px³)</th>
+                        <th>Area (in²)</th>
+                        <th>Weight (oz)</th>
+                        <th>Grade</th>
+                        <th>L/W Ratio</th>
+                        <th>Solidity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userAnalyses.map((analysis) => (
+                        <tr key={analysis.object_id}>
+                          <td>{analysis.object_id}</td>
+                          <td>{analysis.image_name}</td>
+                          <td>{analysis.object_id_in_image}</td>
+                          <td>{analysis.area_px2.toFixed(2)}</td>
+                          <td>{analysis.width_px.toFixed(2)}</td>
+                          <td>{analysis.length_px.toFixed(2)}</td>
+                          <td>{analysis.volume_px3.toFixed(2)}</td>
+                          <td>{analysis.area_in2.toFixed(2)}</td>
+                          <td>{analysis.weight_oz.toFixed(2)}</td>
+                          <td className={`grade-${analysis.grade.replace(/\s+/g, '-').toLowerCase()}`}>
+                            {analysis.grade}
+                          </td>
+                          <td>{analysis.lw_ratio.toFixed(2)}</td>
+                          <td>{analysis.solidity.toFixed(3)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
 
-        {!loadingAnalyses && userAnalyses.length === 0 && !analysesError && (
-          <div className="no-files-message">
-            <div className="no-files-title">
-              📊 No analysis data found
-            </div>
-            <div className="no-files-subtitle">
-              Process images to see your analysis data here.
-            </div>
-          </div>
+            {!loadingAnalyses && userAnalyses.length === 0 && !analysesError && (
+              <div className="no-files-message">
+                <div className="no-files-title">
+                  📊 No analysis data found
+                </div>
+                <div className="no-files-subtitle">
+                  Process images to see your analysis data here.
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

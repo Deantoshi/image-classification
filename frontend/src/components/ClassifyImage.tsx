@@ -124,14 +124,6 @@ const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ userId
         <p className="classify-description">
           Run Detectron2 ML processing on uploaded images
         </p>
-        
-        <button
-          onClick={handleClassify}
-          disabled={classifying}
-          className="classify-button"
-        >
-          {classifying ? '⏳ Processing...' : '🚀 Classify Images'}
-        </button>
       </div>
 
       {error && (
@@ -165,31 +157,6 @@ const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ userId
               </div>
             )}
           </div>
-
-          {result.stdout && (
-            <div className="output-section">
-              <strong className="output-label">
-                📄 Script Output:
-              </strong>
-              {formatOutput(result.stdout)}
-            </div>
-          )}
-
-          {result.stderr && (
-            <div className="output-section">
-              <strong className="output-label error">
-                ⚠️ Error Output:
-              </strong>
-              {formatOutput(result.stderr)}
-            </div>
-          )}
-
-          {result.status === 'success' && result.output_files_generated && result.output_files_generated > 0 && (
-            <div className="next-step-info">
-              <span className="info-title">💡 <strong>Next step:</strong></span>
-              <span className="info-text"> Use the "View Output" section below to see your processed results!</span>
-            </div>
-          )}
         </div>
       )}
 

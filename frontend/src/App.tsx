@@ -101,23 +101,6 @@ function App() {
 
         <FileDisplay ref={fileDisplayRef} userId={user.id} />
 
-        <div className="getting-started">
-          <h3 className="section-title">
-            📋 Getting Started
-          </h3>
-          <ol className="instruction-list">
-            <li className="instruction-item">
-              Start your FastAPI backend: <code className="inline-code">python server.py</code>
-            </li>
-            <li className="instruction-item">Select one or more image files using the file input above</li>
-            <li className="instruction-item">Click "Upload Images" to send them to the backend</li>
-            <li className="instruction-item">
-              Images will be saved to the <code className="inline-code">backend/input</code> folder
-            </li>
-            <li className="instruction-item">Click "Classify Images" to run your ML script on the uploaded images</li>
-            <li>Click "View Output" to see processed results (CSV files and images)</li>
-          </ol>
-        </div>
       </div>
     </>
   )
