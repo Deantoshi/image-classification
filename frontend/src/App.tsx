@@ -11,6 +11,7 @@ function App() {
   const classifyImageSectionRef = useRef<HTMLDivElement>(null)
   const fileUploadRef = useRef<FileUploadRef>(null)
   const fileDisplayRef = useRef<FileDisplayRef>(null)
+  const fileDisplaySectionRef = useRef<HTMLDivElement>(null)
 
   // Check localStorage for existing user on mount
   useEffect(() => {
@@ -63,6 +64,14 @@ function App() {
     if (fileDisplayRef.current) {
       await fileDisplayRef.current.parseAnalysisCSV()
     }
+
+    // Scroll to the FileDisplay section
+    if (fileDisplaySectionRef.current) {
+      fileDisplaySectionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
   }
 
   if (!user) {
@@ -99,7 +108,9 @@ function App() {
           />
         </div>
 
-        <FileDisplay ref={fileDisplayRef} userId={user.id} />
+        <div ref={fileDisplaySectionRef}>
+          <FileDisplay ref={fileDisplayRef} userId={user.id} />
+        </div>
 
       </div>
     </>
