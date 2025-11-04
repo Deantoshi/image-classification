@@ -25,6 +25,16 @@ def init_db():
         )
     ''')
 
+    # Create image_match table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS image_match (
+            image_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image_name TEXT NOT NULL,
+            user_id INTEGER,
+            FOREIGN KEY (user_id) REFERENCES user (id)
+        )
+    ''')
+
     conn.commit()
     conn.close()
 

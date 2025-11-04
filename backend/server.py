@@ -9,6 +9,7 @@ from typing import List
 import mimetypes
 from database import init_db
 from routes.user_routes import router as user_router
+from routes.image_routes import router as image_router
 
 app = FastAPI()
 
@@ -19,7 +20,7 @@ init_db()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173", 
+        "http://localhost:5173",
         "http://localhost:3000",
         "http://34.134.92.145:5173",  # Add your VM's IP
         "http://34.134.92.145:3000"  # Add your VM's IP],  # Vite and Create React App default ports
@@ -31,6 +32,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(user_router, prefix="/api", tags=["users"])
+app.include_router(image_router, prefix="/api", tags=["images"])
 
 # Ensure the input and output directories exist
 INPUT_DIR = "input"
