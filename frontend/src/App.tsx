@@ -59,6 +59,7 @@ function App() {
 
   const handleClassifyComplete = async () => {
     // After classification completes, automatically parse the CSV and add to database
+    // This will also automatically refresh the output files and analyses display
     if (fileDisplayRef.current) {
       await fileDisplayRef.current.parseAnalysisCSV()
     }

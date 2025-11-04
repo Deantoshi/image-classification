@@ -1,4 +1,4 @@
-import { useState, forwardRef, useImperativeHandle } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { getUserImages } from '../services/ImageService'
 import { addAnalysis, getUserAnalyses, AnalysisRecord } from '../services/UserAnalysis'
 import './FileDisplay.css'
@@ -23,6 +23,7 @@ interface FileDisplayProps {
 
 export interface FileDisplayRef {
   parseAnalysisCSV: () => Promise<void>;
+  refreshAll: () => Promise<void>;
 }
 
 const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, ref) => {
@@ -34,6 +35,12 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
   const [userAnalyses, setUserAnalyses] = useState<AnalysisRecord[]>([])
   const [loadingAnalyses, setLoadingAnalyses] = useState(false)
   const [analysesError, setAnalysesError] = useState<string | null>(null)
+
+  // Automatically fetch output files and user analyses when component mounts or userId changes
+  useEffect(() => {
+    fetchOutputFiles()
+    fetchUserAnalyses()
+  }, [userId])
 
   const fetchOutputFiles = async () => {
     setLoading(true)
@@ -199,6 +206,14 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
     }
   }
 
+  // Method to refresh both output files and user analyses
+  const refreshAll = async () => {
+    await Promise.all([
+      fetchOutputFiles(),
+      fetchUserAnalyses()
+    ])
+  }
+
   // Method to parse the analysis CSV and add records to database
   const parseAnalysisCSV = async () => {
     try {
@@ -214,6 +229,9 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
         // Parse and add analysis records
         await parseAndAddAnalysisRecords(csvContent)
         console.log('Analysis CSV parsed and records added successfully')
+
+        // Automatically refresh the display after parsing
+        await refreshAll()
       } else {
         console.log('Analysis CSV not found or could not be fetched')
       }
@@ -222,9 +240,10 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
     }
   }
 
-  // Expose parseAnalysisCSV method to parent component
+  // Expose parseAnalysisCSV and refreshAll methods to parent component
   useImperativeHandle(ref, () => ({
-    parseAnalysisCSV
+    parseAnalysisCSV,
+    refreshAll
   }))
 
   const toggleFileExpansion = async (filename: string, fileType: string) => {
