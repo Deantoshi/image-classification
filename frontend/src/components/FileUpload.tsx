@@ -7,7 +7,11 @@ interface UploadResponse {
   status: string;
 }
 
-const FileUpload = () => {
+interface FileUploadProps {
+  onUploadComplete?: () => void;
+}
+
+const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [clearing, setClearing] = useState(false)
@@ -52,6 +56,11 @@ const FileUpload = () => {
         const result: UploadResponse = await response.json()
         setUploadResult(`✅ ${result.message}`)
         setUploadedFiles(result.files)
+
+        // Call the callback to trigger auto-scroll and classification
+        if (onUploadComplete) {
+          onUploadComplete()
+        }
       } else {
         const error = await response.json()
         setUploadResult(`❌ Error: ${error.detail}`)

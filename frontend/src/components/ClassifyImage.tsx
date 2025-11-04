@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 import './ClassifyImage.css'
 
 interface ClassificationResult {
@@ -11,7 +11,11 @@ interface ClassificationResult {
   processed_files?: string[];
 }
 
-const ClassifyImage = () => {
+export interface ClassifyImageRef {
+  classify: () => void;
+}
+
+const ClassifyImage = forwardRef<ClassifyImageRef>((props, ref) => {
   const [classifying, setClassifying] = useState(false)
   const [result, setResult] = useState<ClassificationResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -44,6 +48,11 @@ const ClassifyImage = () => {
       setClassifying(false)
     }
   }
+
+  // Expose handleClassify to parent component via ref
+  useImperativeHandle(ref, () => ({
+    classify: handleClassify
+  }))
 
   const formatOutput = (text: string) => {
     if (!text) return null
@@ -151,6 +160,8 @@ const ClassifyImage = () => {
       )}
     </div>
   )
-}
+})
+
+ClassifyImage.displayName = 'ClassifyImage'
 
 export default ClassifyImage
