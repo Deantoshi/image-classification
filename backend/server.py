@@ -68,7 +68,7 @@ async def upload_files(files: List[UploadFile] = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.delete("/clear-all")
+@app.delete("/clear-all-input")
 async def clear_all_files():
     """
     Delete all files in both input and output directories.
@@ -86,12 +86,12 @@ async def clear_all_files():
                     input_files_deleted += 1
         
         # Clear output directory
-        if os.path.exists(OUTPUT_DIR):
-            for filename in os.listdir(OUTPUT_DIR):
-                file_path = os.path.join(OUTPUT_DIR, filename)
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
-                    output_files_deleted += 1
+        # if os.path.exists(OUTPUT_DIR):
+        #     for filename in os.listdir(OUTPUT_DIR):
+        #         file_path = os.path.join(OUTPUT_DIR, filename)
+        #         if os.path.isfile(file_path):
+        #             os.remove(file_path)
+        #             output_files_deleted += 1
         
         return {
             "message": f"Successfully cleared all files. Deleted {input_files_deleted} input files and {output_files_deleted} output files.",

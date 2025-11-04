@@ -37,6 +37,19 @@ const ClassifyImage = forwardRef<ClassifyImageRef>((props, ref) => {
       if (response.ok) {
         const classificationResult: ClassificationResult = await response.json()
         setResult(classificationResult)
+
+        // Clear input directory after successful classification
+        if (classificationResult.status === 'success') {
+          try {
+            await fetch('http://localhost:8000/clear-all-input', {
+              method: 'DELETE',
+            })
+            console.log('Input directory cleared successfully')
+          } catch (clearError) {
+            console.error('Failed to clear input directory:', clearError)
+            // Don't show error to user, just log it
+          }
+        }
       } else {
         const errorData = await response.json()
         setError(`❌ Error: ${errorData.detail}`)
