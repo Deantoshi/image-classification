@@ -69,6 +69,59 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
     }
   };
 
+  const downloadAllImages = async () => {
+    for (const image of images) {
+      try {
+        const response = await fetch(`${API_BASE_URL}${image.url}`);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = image.filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        // Small delay between downloads to avoid browser blocking
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } catch (err) {
+        console.error(`Failed to download ${image.filename}:`, err);
+      }
+    }
+  };
+
+  const downloadResultsAsCSV = () => {
+    if (!queryResult) return;
+
+    // Create CSV content
+    const headers = queryResult.columns.join(',');
+    const rows = queryResult.data.map(row =>
+      queryResult.columns.map(col => {
+        const value = row[col];
+        // Handle null/undefined values and escape quotes
+        if (value === null || value === undefined) return 'NULL';
+        const stringValue = String(value);
+        // Escape quotes and wrap in quotes if contains comma, quote, or newline
+        if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+          return `"${stringValue.replace(/"/g, '""')}"`;
+        }
+        return stringValue;
+      }).join(',')
+    );
+    const csvContent = [headers, ...rows].join('\n');
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `query_results_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   const executeQuery = async (queryToExecute?: string) => {
     const query = queryToExecute || sqlQuery;
 
@@ -218,7 +271,12 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
 
             {queryResult && (
               <div className="results-section">
-                <h3>Results ({queryResult.row_count} rows)</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <h3>Results ({queryResult.row_count} rows)</h3>
+                  <button className="refresh-btn" onClick={downloadResultsAsCSV}>
+                    Download Results (CSV)
+                  </button>
+                </div>
                 <div className="table-wrapper">
                   <table className="results-table">
                     <thead>
@@ -292,10 +350,21 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
 
         {activeTab === 'images' && (
           <div className="images-panel">
-            <h3>Output Images</h3>
-            <button className="refresh-btn" onClick={loadImages}>
-              Refresh Images
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3>Output Images</h3>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button className="refresh-btn" onClick={loadImages}>
+                  Refresh Images
+                </button>
+                <button
+                  className="refresh-btn"
+                  onClick={downloadAllImages}
+                  disabled={images.length === 0}
+                >
+                  Download All Images
+                </button>
+              </div>
+            </div>
 
             <div className="images-grid">
               {images.map((image) => (
