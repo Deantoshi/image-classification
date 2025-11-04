@@ -157,7 +157,7 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
           disabled={!selectedFiles || uploading || clearing}
           className="upload-button"
         >
-          {uploading ? '⏳ Uploading...' : '📤 Send Images to Server'}
+          {uploading ? '⏳ Uploading...' : '📤 Classify Images'}
         </button>
 
         <button
