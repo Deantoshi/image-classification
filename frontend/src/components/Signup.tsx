@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { getOrCreateName } from '../services/UserService';
 import './Signup.css';
+import monsterTruckSweetPotato from '/monster_truck_sweet_potato.svg';
 
 interface SignupProps {
   onSignupComplete: (userId: number, username: string) => void;
@@ -59,7 +60,9 @@ function Signup({ onSignupComplete }: SignupProps) {
       <div className="grain-background"></div>
 
       <div className="signup-card">
-        <div className="wheat-icon">🌾</div>
+        <div className="wheat-icon">
+          <img src={monsterTruckSweetPotato} alt="Monster truck sweet potato" />
+        </div>
 
         <h1 className="signup-title">Welcome to the Harvest</h1>
         <p className="signup-subtitle">Enter your name to begin</p>
