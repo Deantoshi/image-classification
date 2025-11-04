@@ -7,8 +7,13 @@ import subprocess
 import sys
 from typing import List
 import mimetypes
+from database import init_db
+from routes.user_routes import router as user_router
 
 app = FastAPI()
+
+# Initialize the database on startup
+init_db()
 
 # Add CORS middleware to allow requests from frontend
 app.add_middleware(
@@ -23,6 +28,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(user_router, prefix="/api", tags=["users"])
 
 # Ensure the input and output directories exist
 INPUT_DIR = "input"
