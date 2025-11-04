@@ -95,3 +95,70 @@ code {
   border-radius: 4px;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
+
+/* App Component Styles */
+.app-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #e0e6ed;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 30px 0;
+}
+
+.main-title {
+  background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 3rem;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+.getting-started {
+  margin-top: 40px;
+  padding: 25px;
+  background: rgba(30, 30, 46, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+  color: #e0e6ed;
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.instruction-list {
+  color: #9ca3af;
+  line-height: 1.8;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.instruction-item {
+  margin-bottom: 8px;
+}
+
+.inline-code {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+}
