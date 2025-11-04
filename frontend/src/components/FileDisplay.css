@@ -1,0 +1,323 @@
+.file-display-card {
+  padding: 25px;
+  background: linear-gradient(to bottom, #f5f1e8 0%, #ede4d3 100%);
+  border: 3px solid #8b6f47;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.file-display-card:hover {
+  border-color: #d4a574;
+  box-shadow: 0 12px 40px rgba(139, 111, 71, 0.4);
+}
+
+.file-display-header {
+  margin-bottom: 20px;
+}
+
+.file-display-title {
+  margin: 0 0 15px 0;
+  color: #5d4e37;
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-family: 'Georgia', serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.view-output-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #f5c842 0%, #e6a800 100%);
+  color: #5d4e37;
+  border: 3px solid #d4a000;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: 'Georgia', serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(230, 168, 0, 0.3);
+  transform: translateY(0);
+}
+
+.view-output-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ffd54f 0%, #f5c842 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(245, 200, 66, 0.5);
+}
+
+.view-output-button:disabled {
+  background: rgba(245, 200, 66, 0.4);
+  border-color: rgba(212, 160, 0, 0.5);
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.error-message {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(211, 47, 47, 0.15);
+  color: #b71c1c;
+  border-radius: 8px;
+  border: 2px solid rgba(211, 47, 47, 0.4);
+  font-family: 'Georgia', serif;
+  font-weight: 500;
+}
+
+.files-container {
+  margin-top: 20px;
+}
+
+.files-count {
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  color: #8b6f47;
+  font-weight: 500;
+  font-family: 'Georgia', serif;
+}
+
+.file-item {
+  margin-bottom: 12px;
+  border: 2px solid #a0826d;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(139, 111, 71, 0.2);
+}
+
+.file-item:hover {
+  border-color: #8b6f47;
+  box-shadow: 0 4px 16px rgba(139, 111, 71, 0.3);
+}
+
+.file-header {
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+  background: rgba(245, 241, 232, 0.4);
+}
+
+.file-header:hover {
+  background: rgba(212, 165, 116, 0.2);
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-name {
+  font-weight: 600;
+  color: #5d4e37;
+  font-size: 1rem;
+  font-family: 'Georgia', serif;
+}
+
+.file-size {
+  color: #a0826d;
+  font-size: 0.9rem;
+  font-family: 'Georgia', serif;
+}
+
+.expand-icon {
+  font-size: 1.2rem;
+  color: #8b6f47;
+  transition: transform 0.2s ease;
+}
+
+.expand-icon.expanded {
+  transform: rotate(90deg);
+}
+
+.file-content {
+  border-top: 2px solid rgba(139, 111, 71, 0.3);
+  background: rgba(245, 241, 232, 0.7);
+}
+
+.csv-table-container {
+  margin-top: 16px;
+  overflow-x: auto;
+  padding: 16px;
+}
+
+.csv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(139, 111, 71, 0.3);
+}
+
+.csv-table thead tr {
+  background: linear-gradient(135deg, #d4a574 0%, #b8956a 100%);
+}
+
+.csv-table th {
+  border: 1px solid rgba(139, 111, 71, 0.3);
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #5d4e37;
+  font-size: 0.95rem;
+  font-family: 'Georgia', serif;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.csv-table tbody tr:nth-child(even) {
+  background: rgba(245, 241, 232, 0.3);
+}
+
+.csv-table tbody tr:nth-child(odd) {
+  background: white;
+}
+
+.csv-table tbody tr:hover {
+  background: rgba(212, 165, 116, 0.2);
+}
+
+.csv-table td {
+  border: 1px solid rgba(139, 111, 71, 0.2);
+  padding: 10px;
+  color: #5d4e37;
+  font-family: 'Georgia', serif;
+}
+
+.csv-row-limit-notice {
+  padding: 16px;
+  text-align: center;
+  font-style: italic;
+  color: #8b6f47;
+  background: rgba(245, 241, 232, 0.6);
+  border-radius: 0 0 8px 8px;
+  border-top: 2px solid rgba(139, 111, 71, 0.2);
+  font-family: 'Georgia', serif;
+}
+
+.loading-message {
+  padding: 20px;
+  text-align: center;
+  color: #a0826d;
+  font-style: italic;
+  font-family: 'Georgia', serif;
+}
+
+.empty-csv-message {
+  padding: 20px;
+  font-style: italic;
+  color: #a0826d;
+  text-align: center;
+  font-family: 'Georgia', serif;
+}
+
+.image-container {
+  margin-top: 16px;
+  text-align: center;
+  padding: 16px;
+}
+
+.output-image {
+  max-width: 100%;
+  max-height: 600px;
+  border: 3px solid #8b6f47;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(139, 111, 71, 0.4);
+}
+
+.image-error {
+  display: none;
+  color: #b71c1c;
+  margin-top: 16px;
+  font-style: italic;
+  font-family: 'Georgia', serif;
+}
+
+.download-link-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.download-link {
+  color: #8b6f47;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: 'Georgia', serif;
+  transition: color 0.2s ease;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #f5f1e8 0%, #ede4d3 100%);
+  border: 2px solid #a0826d;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(139, 111, 71, 0.2);
+}
+
+.download-link:hover {
+  color: #5d4e37;
+  background: linear-gradient(135deg, #ede4d3 0%, #e0d5c3 100%);
+  border-color: #8b6f47;
+  box-shadow: 0 4px 12px rgba(139, 111, 71, 0.3);
+  transform: translateY(-1px);
+}
+
+.no-files-message {
+  margin-top: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  color: #856404;
+  border-radius: 8px;
+  border: 2px solid #d4a000;
+  text-align: center;
+  font-family: 'Georgia', serif;
+}
+
+.no-files-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.no-files-subtitle {
+  font-size: 0.9rem;
+  color: #8b6f47;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .file-display-card {
+    padding: 20px 15px;
+  }
+
+  .file-display-title {
+    font-size: 1.2rem;
+  }
+
+  .view-output-button {
+    font-size: 0.9rem;
+    padding: 10px 18px;
+  }
+
+  .csv-table {
+    font-size: 0.8rem;
+  }
+
+  .csv-table th,
+  .csv-table td {
+    padding: 8px;
+  }
+
+  .output-image {
+    max-height: 400px;
+  }
+}
