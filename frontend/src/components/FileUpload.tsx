@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './FileUpload.css'
 
 interface UploadResponse {
@@ -14,9 +14,36 @@ interface FileUploadProps {
 const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
-  const [clearing, setClearing] = useState(false)
   const [uploadResult, setUploadResult] = useState<string | null>(null)
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
+  const [showPreviews, setShowPreviews] = useState(false)
+  const [previewUrls, setPreviewUrls] = useState<string[]>([])
+
+  // Create preview URLs when files are selected
+  useEffect(() => {
+    if (!selectedFiles || selectedFiles.length === 0) {
+      // Clean up old preview URLs
+      previewUrls.forEach(url => URL.revokeObjectURL(url))
+      setPreviewUrls([])
+      return
+    }
+
+    // Clean up old preview URLs before creating new ones
+    previewUrls.forEach(url => URL.revokeObjectURL(url))
+
+    // Create new preview URLs
+    const newPreviewUrls: string[] = []
+    Array.from(selectedFiles).forEach(file => {
+      const url = URL.createObjectURL(file)
+      newPreviewUrls.push(url)
+    })
+    setPreviewUrls(newPreviewUrls)
+
+    // Cleanup function to revoke URLs when component unmounts or files change
+    return () => {
+      newPreviewUrls.forEach(url => URL.revokeObjectURL(url))
+    }
+  }, [selectedFiles])
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFiles(event.target.files)
@@ -26,7 +53,7 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
 
   const triggerFileInput = () => {
     const fileInput = document.getElementById('file-input') as HTMLInputElement
-    if (fileInput && !uploading && !clearing) {
+    if (fileInput && !uploading) {
       fileInput.click()
     }
   }
@@ -73,37 +100,22 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
     }
   }
 
-  const clearFiles = async () => {
-    setClearing(true)
-    
-    try {
-      const response = await fetch('http://localhost:8000/clear-all', {
-    // const response = await fetch('http://34.134.92.145:8000/clear-all', {
-        method: 'DELETE',
-      })
+  const removeFile = (indexToRemove: number) => {
+    if (!selectedFiles) return
 
-      if (response.ok) {
-        const result = await response.json()
-        setUploadResult(`✅ ${result.message}`)
-      } else {
-        const error = await response.json()
-        setUploadResult(`❌ Error: ${error.detail}`)
-      }
-    } catch (error) {
-      console.error('Clear error:', error)
-      setUploadResult(`❌ Error: Failed to connect to server. Make sure FastAPI is running on port 8000.`)
-    } finally {
-      setClearing(false)
-    }
+    const filesArray = Array.from(selectedFiles)
+    filesArray.splice(indexToRemove, 1)
 
-    // Clear the UI state
-    setSelectedFiles(null)
-    setUploadedFiles([])
-    // Reset the file input
+    // Create a new DataTransfer object to update the file input
+    const dataTransfer = new DataTransfer()
+    filesArray.forEach(file => dataTransfer.items.add(file))
+
     const fileInput = document.getElementById('file-input') as HTMLInputElement
     if (fileInput) {
-      fileInput.value = ''
+      fileInput.files = dataTransfer.files
     }
+
+    setSelectedFiles(dataTransfer.files.length > 0 ? dataTransfer.files : null)
   }
 
   return (
@@ -115,13 +127,13 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
         multiple
         accept="image/*"
         onChange={handleFileSelect}
-        disabled={uploading || clearing}
+        disabled={uploading}
         className="file-input-hidden"
       />
 
       {/* Plus sign upload area */}
       <div
-        className={`upload-trigger ${(uploading || clearing) ? 'disabled' : ''}`}
+        className={`upload-trigger ${uploading ? 'disabled' : ''}`}
         onClick={triggerFileInput}
         role="button"
         tabIndex={0}
@@ -138,13 +150,56 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
 
       {selectedFiles && selectedFiles.length > 0 && (
         <div className="selected-files-container">
-          <strong className="selected-files-title">
-            Selected files ({selectedFiles.length}):
-          </strong>
+          <div className="selected-files-header">
+            <strong className="selected-files-title">
+              Selected files ({selectedFiles.length}):
+            </strong>
+            <button
+              className="toggle-previews-button"
+              onClick={() => setShowPreviews(!showPreviews)}
+              aria-label={showPreviews ? "Hide previews" : "Show previews"}
+            >
+              {showPreviews ? '▼' : '▶'} {showPreviews ? 'Hide' : 'Show'} Previews
+            </button>
+          </div>
+
+          {showPreviews && (
+            <div className="image-previews-grid">
+              {Array.from(selectedFiles).map((file, index) => (
+                <div key={index} className="preview-item">
+                  <img
+                    src={previewUrls[index]}
+                    alt={file.name}
+                    className="preview-image"
+                  />
+                  <div className="preview-filename">{file.name}</div>
+                  <button
+                    className="preview-delete-button"
+                    onClick={() => removeFile(index)}
+                    disabled={uploading}
+                    aria-label={`Remove ${file.name}`}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
           <ul className="selected-files-list">
             {Array.from(selectedFiles).map((file, index) => (
               <li key={index} className="selected-file-item">
-                {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                <span className="file-info">
+                  {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                </span>
+                <button
+                  className="delete-file-button"
+                  onClick={() => removeFile(index)}
+                  disabled={uploading}
+                  aria-label={`Remove ${file.name}`}
+                >
+                  ✕
+                </button>
               </li>
             ))}
           </ul>
@@ -154,18 +209,10 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
       <div className="button-group">
         <button
           onClick={handleUpload}
-          disabled={!selectedFiles || uploading || clearing}
+          disabled={!selectedFiles || uploading}
           className="upload-button"
         >
           {uploading ? '⏳ Uploading...' : '📤 Classify Images'}
-        </button>
-
-        <button
-          onClick={clearFiles}
-          disabled={uploading || clearing}
-          className="clear-button"
-        >
-          {clearing ? '⏳ Clearing...' : '🗑️ Clear All Files'}
         </button>
       </div>
 
