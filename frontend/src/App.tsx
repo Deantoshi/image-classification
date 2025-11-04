@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import Signup from './components/Signup'
-import FileUpload from './components/FileUpload'
+import FileUpload, { FileUploadRef } from './components/FileUpload'
 import ClassifyImage, { ClassifyImageRef } from './components/ClassifyImage'
 import FileDisplay from './components/FileDisplay'
 
@@ -9,6 +9,7 @@ function App() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
   const classifyImageRef = useRef<ClassifyImageRef>(null)
   const classifyImageSectionRef = useRef<HTMLDivElement>(null)
+  const fileUploadRef = useRef<FileUploadRef>(null)
 
   // Check localStorage for existing user on mount
   useEffect(() => {
@@ -48,6 +49,13 @@ function App() {
     }
   }
 
+  const handleClearComplete = () => {
+    // Clear frontend files after backend clears successfully
+    if (fileUploadRef.current) {
+      fileUploadRef.current.clearFiles()
+    }
+  }
+
   if (!user) {
     return <Signup onSignupComplete={handleSignupComplete} />
   }
@@ -71,10 +79,10 @@ function App() {
           </button>
         </div>
 
-        <FileUpload onUploadComplete={handleUploadComplete} />
+        <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} />
 
         <div ref={classifyImageSectionRef}>
-          <ClassifyImage ref={classifyImageRef} />
+          <ClassifyImage ref={classifyImageRef} onClearComplete={handleClearComplete} />
         </div>
 
         <FileDisplay />

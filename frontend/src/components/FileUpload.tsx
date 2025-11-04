@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import './FileUpload.css'
 
 interface UploadResponse {
@@ -11,7 +11,11 @@ interface FileUploadProps {
   onUploadComplete?: () => void;
 }
 
-const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
+export interface FileUploadRef {
+  clearFiles: () => void;
+}
+
+const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplete }, ref) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadResult, setUploadResult] = useState<string | null>(null)
@@ -141,6 +145,23 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
     setSelectedFiles(dataTransfer.files.length > 0 ? dataTransfer.files : null)
   }
 
+  const clearAllFiles = () => {
+    const fileInput = document.getElementById('file-input') as HTMLInputElement
+    if (fileInput) {
+      fileInput.value = ''
+      fileInput.files = null
+    }
+    setSelectedFiles(null)
+    setUploadResult(null)
+    setUploadedFiles([])
+    setShowPreviews(false)
+  }
+
+  // Expose clearAllFiles to parent component via ref
+  useImperativeHandle(ref, () => ({
+    clearFiles: clearAllFiles
+  }))
+
   return (
     <div className="file-upload-card">
       {/* Hidden file input */}
@@ -260,6 +281,8 @@ const FileUpload = ({ onUploadComplete }: FileUploadProps) => {
       )}
     </div>
   )
-}
+})
+
+FileUpload.displayName = 'FileUpload'
 
 export default FileUpload

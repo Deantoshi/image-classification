@@ -15,7 +15,11 @@ export interface ClassifyImageRef {
   classify: () => void;
 }
 
-const ClassifyImage = forwardRef<ClassifyImageRef>((props, ref) => {
+interface ClassifyImageProps {
+  onClearComplete?: () => void;
+}
+
+const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ onClearComplete }, ref) => {
   const [classifying, setClassifying] = useState(false)
   const [result, setResult] = useState<ClassificationResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -45,6 +49,11 @@ const ClassifyImage = forwardRef<ClassifyImageRef>((props, ref) => {
               method: 'DELETE',
             })
             console.log('Input directory cleared successfully')
+
+            // Notify parent to clear frontend files
+            if (onClearComplete) {
+              onClearComplete()
+            }
           } catch (clearError) {
             console.error('Failed to clear input directory:', clearError)
             // Don't show error to user, just log it
