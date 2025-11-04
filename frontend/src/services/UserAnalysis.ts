@@ -74,7 +74,7 @@ export const addAnalysis = async (
   analysisData: AddAnalysisRequest
 ): Promise<AddAnalysisResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/add-analysis`, {
+    const response = await fetch(`${API_BASE_URL}/add-analysis`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ export const getUserAnalyses = async (user_id: number): Promise<GetUserAnalysesR
  */
 export const getAllUserAnalyses = async (): Promise<GetAllUserAnalysesResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/get-all-user-analyses`, {
+    const response = await fetch(`${API_BASE_URL}/get-all-user-analyses`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
