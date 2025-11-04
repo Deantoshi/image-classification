@@ -19,9 +19,10 @@ export interface ClassifyImageRef {
 interface ClassifyImageProps {
   userId: number;
   onClearComplete?: () => void;
+  onClassifyComplete?: () => Promise<void>;
 }
 
-const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ userId, onClearComplete }, ref) => {
+const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ userId, onClearComplete, onClassifyComplete }, ref) => {
   const [classifying, setClassifying] = useState(false)
   const [result, setResult] = useState<ClassificationResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -70,6 +71,11 @@ const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ userId
                   // Don't show error to user, just log it
                 }
               }
+            }
+
+            // Trigger CSV parsing to add analysis records to database
+            if (onClassifyComplete) {
+              await onClassifyComplete()
             }
           } catch (clearError) {
             console.error('Failed to clear input directory:', clearError)

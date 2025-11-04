@@ -293,6 +293,107 @@
   color: #8b6f47;
 }
 
+/* User Analyses Section */
+.user-analyses-section {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 3px solid #8b6f47;
+}
+
+.analyses-container {
+  margin-top: 20px;
+}
+
+.analyses-table-wrapper {
+  overflow-x: auto;
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  border: 2px solid #a0826d;
+}
+
+.analyses-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(139, 111, 71, 0.3);
+  min-width: 1200px;
+}
+
+.analyses-table thead tr {
+  background: linear-gradient(135deg, #d4a574 0%, #b8956a 100%);
+}
+
+.analyses-table th {
+  border: 1px solid rgba(139, 111, 71, 0.3);
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  color: #5d4e37;
+  font-size: 0.9rem;
+  font-family: 'Georgia', serif;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+.analyses-table tbody tr:nth-child(even) {
+  background: rgba(245, 241, 232, 0.3);
+}
+
+.analyses-table tbody tr:nth-child(odd) {
+  background: white;
+}
+
+.analyses-table tbody tr:hover {
+  background: rgba(212, 165, 116, 0.2);
+  transition: background 0.2s ease;
+}
+
+.analyses-table td {
+  border: 1px solid rgba(139, 111, 71, 0.2);
+  padding: 10px 8px;
+  color: #5d4e37;
+  font-family: 'Georgia', serif;
+  white-space: nowrap;
+}
+
+/* Grade-specific styling */
+.analyses-table td[class*="grade-"] {
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.analyses-table td.grade-medium {
+  background: rgba(76, 175, 80, 0.2);
+  color: #2e7d32;
+}
+
+.analyses-table td.grade-large-1 {
+  background: rgba(33, 150, 243, 0.2);
+  color: #1565c0;
+}
+
+.analyses-table td.grade-large-2 {
+  background: rgba(33, 150, 243, 0.3);
+  color: #0d47a1;
+}
+
+.analyses-table td.grade-extra-large {
+  background: rgba(156, 39, 176, 0.2);
+  color: #6a1b9a;
+}
+
+.analyses-table td.grade-not-marketable {
+  background: rgba(244, 67, 54, 0.2);
+  color: #c62828;
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .file-display-card {
@@ -319,5 +420,14 @@
 
   .output-image {
     max-height: 400px;
+  }
+
+  .analyses-table {
+    font-size: 0.75rem;
+  }
+
+  .analyses-table th,
+  .analyses-table td {
+    padding: 6px 4px;
   }
 }

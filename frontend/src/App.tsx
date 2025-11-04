@@ -3,13 +3,14 @@ import './App.css'
 import Signup from './components/Signup'
 import FileUpload, { FileUploadRef } from './components/FileUpload'
 import ClassifyImage, { ClassifyImageRef } from './components/ClassifyImage'
-import FileDisplay from './components/FileDisplay'
+import FileDisplay, { FileDisplayRef } from './components/FileDisplay'
 
 function App() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
   const classifyImageRef = useRef<ClassifyImageRef>(null)
   const classifyImageSectionRef = useRef<HTMLDivElement>(null)
   const fileUploadRef = useRef<FileUploadRef>(null)
+  const fileDisplayRef = useRef<FileDisplayRef>(null)
 
   // Check localStorage for existing user on mount
   useEffect(() => {
@@ -56,6 +57,13 @@ function App() {
     }
   }
 
+  const handleClassifyComplete = async () => {
+    // After classification completes, automatically parse the CSV and add to database
+    if (fileDisplayRef.current) {
+      await fileDisplayRef.current.parseAnalysisCSV()
+    }
+  }
+
   if (!user) {
     return <Signup onSignupComplete={handleSignupComplete} />
   }
@@ -82,10 +90,15 @@ function App() {
         <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} />
 
         <div ref={classifyImageSectionRef}>
-          <ClassifyImage ref={classifyImageRef} userId={user.id} onClearComplete={handleClearComplete} />
+          <ClassifyImage
+            ref={classifyImageRef}
+            userId={user.id}
+            onClearComplete={handleClearComplete}
+            onClassifyComplete={handleClassifyComplete}
+          />
         </div>
 
-        <FileDisplay userId={user.id} />
+        <FileDisplay ref={fileDisplayRef} userId={user.id} />
 
         <div className="getting-started">
           <h3 className="section-title">

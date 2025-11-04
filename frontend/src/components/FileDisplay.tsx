@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 import { getUserImages } from '../services/ImageService'
+import { addAnalysis, getUserAnalyses, AnalysisRecord } from '../services/UserAnalysis'
 import './FileDisplay.css'
 
 interface OutputFile {
@@ -20,12 +21,19 @@ interface FileDisplayProps {
   userId: number;
 }
 
-const FileDisplay = ({ userId }: FileDisplayProps) => {
+export interface FileDisplayRef {
+  parseAnalysisCSV: () => Promise<void>;
+}
+
+const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, ref) => {
   const [files, setFiles] = useState<OutputFile[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [csvData, setCsvData] = useState<{ [key: string]: CSVData }>({})
   const [expandedFiles, setExpandedFiles] = useState<Set<string>>(new Set())
+  const [userAnalyses, setUserAnalyses] = useState<AnalysisRecord[]>([])
+  const [loadingAnalyses, setLoadingAnalyses] = useState(false)
+  const [analysesError, setAnalysesError] = useState<string | null>(null)
 
   const fetchOutputFiles = async () => {
     setLoading(true)
@@ -63,13 +71,18 @@ const FileDisplay = ({ userId }: FileDisplayProps) => {
     try {
       const response = await fetch(`http://localhost:8000/output/csv/${filename}`)
     // const response = await fetch(`http://34.134.92.145:8000/output/csv/${filename}`)
-      
+
       if (response.ok) {
         const csvContent = await response.json()
         setCsvData(prev => ({
           ...prev,
           [filename]: csvContent
         }))
+
+        // If this is the combined_analysis_with_grades.csv, parse and add analysis records
+        if (filename === 'combined_analysis_with_grades.csv' && csvContent.data && csvContent.data.length > 0) {
+          await parseAndAddAnalysisRecords(csvContent)
+        }
       } else {
         console.error(`Failed to fetch CSV content for ${filename}`)
       }
@@ -77,6 +90,142 @@ const FileDisplay = ({ userId }: FileDisplayProps) => {
       console.error('CSV fetch error:', err)
     }
   }
+
+  const parseAndAddAnalysisRecords = async (csvContent: CSVData) => {
+    try {
+      // First, get the user's images to filter only their analysis records
+      const userImagesResponse = await getUserImages(userId)
+      // The image_match table has 'masked_' prefix, so we need to create a set of original filenames
+      const userImageNames = new Set(
+        userImagesResponse.images.map(img => {
+          // Remove 'masked_' prefix if present to match CSV image names
+          return img.image_name.startsWith('masked_')
+            ? img.image_name.substring(7) // Remove 'masked_' (7 characters)
+            : img.image_name
+        })
+      )
+
+      // Map column headers to their indices
+      const headerMap: { [key: string]: number } = {}
+      csvContent.headers.forEach((header, index) => {
+        headerMap[header] = index
+      })
+
+      let addedCount = 0
+      let skippedCount = 0
+
+      // For each row in the CSV, create an analysis record only if it belongs to this user
+      for (const row of csvContent.data) {
+        try {
+          // Extract image name from the row
+          const imageName = row[headerMap['image_name']] || ''
+
+          // Skip this row if the image doesn't belong to this user
+          if (!userImageNames.has(imageName)) {
+            skippedCount++
+            continue
+          }
+
+          // Extract other values from the row based on header positions
+          const objectIdInImage = parseInt(row[headerMap['object_id_in_image']] || '0')
+          const areaPx2 = parseFloat(row[headerMap['area_px2']] || '0')
+          const topLeftX = parseFloat(row[headerMap['top_left_x']] || '0')
+          const topLeftY = parseFloat(row[headerMap['top_left_y']] || '0')
+          const bottomRightX = parseFloat(row[headerMap['bottom_right_x']] || '0')
+          const bottomRightY = parseFloat(row[headerMap['bottom_right_y']] || '0')
+          const center = row[headerMap['center']] || ''
+          const widthPx = parseFloat(row[headerMap['width_px']] || '0')
+          const lengthPx = parseFloat(row[headerMap['length_px']] || '0')
+          const volumePx3 = parseFloat(row[headerMap['volume_px3']] || '0')
+          const solidity = parseFloat(row[headerMap['solidity']] || '0')
+          const strictSolidity = parseFloat(row[headerMap['strict_solidity']] || '0')
+          const lwRatio = parseFloat(row[headerMap['lw_ratio']] || '0')
+          const areaIn2 = parseFloat(row[headerMap['area_in2']] || '0')
+          const weightOz = parseFloat(row[headerMap['weight_oz']] || '0')
+          const grade = row[headerMap['Grade']] || '' // Note: CSV uses 'Grade' with capital G
+
+          // Call addAnalysis API
+          await addAnalysis({
+            image_name: imageName,
+            object_id_in_image: objectIdInImage,
+            area_px2: areaPx2,
+            top_left_x: topLeftX,
+            top_left_y: topLeftY,
+            bottom_right_x: bottomRightX,
+            bottom_right_y: bottomRightY,
+            center: center,
+            width_px: widthPx,
+            length_px: lengthPx,
+            volume_px3: volumePx3,
+            solidity: solidity,
+            strict_solidity: strictSolidity,
+            lw_ratio: lwRatio,
+            area_in2: areaIn2,
+            weight_oz: weightOz,
+            grade: grade,
+            user_id: userId
+          })
+          addedCount++
+        } catch (rowError) {
+          console.error('Error adding analysis record for row:', rowError)
+          // Continue processing other rows even if one fails
+        }
+      }
+
+      console.log(`Successfully added ${addedCount} analysis records for user ${userId}`)
+      if (skippedCount > 0) {
+        console.log(`Skipped ${skippedCount} records that don't belong to this user`)
+      }
+
+      // After adding all records, fetch the user's analyses to display
+      await fetchUserAnalyses()
+    } catch (error) {
+      console.error('Error parsing and adding analysis records:', error)
+    }
+  }
+
+  const fetchUserAnalyses = async () => {
+    setLoadingAnalyses(true)
+    setAnalysesError(null)
+
+    try {
+      const response = await getUserAnalyses(userId)
+      setUserAnalyses(response.analyses)
+    } catch (err) {
+      console.error('Error fetching user analyses:', err)
+      setAnalysesError('Failed to fetch analysis data')
+    } finally {
+      setLoadingAnalyses(false)
+    }
+  }
+
+  // Method to parse the analysis CSV and add records to database
+  const parseAnalysisCSV = async () => {
+    try {
+      console.log('Automatically parsing analysis CSV...')
+      const filename = 'combined_analysis_with_grades.csv'
+
+      // Fetch the CSV content
+      const response = await fetch(`http://localhost:8000/output/csv/${filename}`)
+      // const response = await fetch(`http://34.134.92.145:8000/output/csv/${filename}`)
+
+      if (response.ok) {
+        const csvContent = await response.json()
+        // Parse and add analysis records
+        await parseAndAddAnalysisRecords(csvContent)
+        console.log('Analysis CSV parsed and records added successfully')
+      } else {
+        console.log('Analysis CSV not found or could not be fetched')
+      }
+    } catch (error) {
+      console.error('Error parsing analysis CSV:', error)
+    }
+  }
+
+  // Expose parseAnalysisCSV method to parent component
+  useImperativeHandle(ref, () => ({
+    parseAnalysisCSV
+  }))
 
   const toggleFileExpansion = async (filename: string, fileType: string) => {
     const newExpanded = new Set(expandedFiles)
@@ -251,8 +400,91 @@ const FileDisplay = ({ userId }: FileDisplayProps) => {
           </div>
         </div>
       )}
+
+      {/* User Analysis Data Section */}
+      <div className="user-analyses-section">
+        <div className="file-display-header">
+          <h3 className="file-display-title">
+            📊 My Analysis Data
+          </h3>
+          <button
+            onClick={fetchUserAnalyses}
+            disabled={loadingAnalyses}
+            className="view-output-button"
+          >
+            {loadingAnalyses ? '⏳ Loading...' : '🔄 Refresh Data'}
+          </button>
+        </div>
+
+        {analysesError && (
+          <div className="error-message">
+            ❌ {analysesError}
+          </div>
+        )}
+
+        {userAnalyses.length > 0 && (
+          <div className="analyses-container">
+            <div className="files-count">
+              Found {userAnalyses.length} analysis record{userAnalyses.length !== 1 ? 's' : ''}
+            </div>
+            <div className="analyses-table-wrapper">
+              <table className="analyses-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Object #</th>
+                    <th>Area (px²)</th>
+                    <th>Width (px)</th>
+                    <th>Length (px)</th>
+                    <th>Volume (px³)</th>
+                    <th>Area (in²)</th>
+                    <th>Weight (oz)</th>
+                    <th>Grade</th>
+                    <th>L/W Ratio</th>
+                    <th>Solidity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userAnalyses.map((analysis) => (
+                    <tr key={analysis.object_id}>
+                      <td>{analysis.object_id}</td>
+                      <td>{analysis.image_name}</td>
+                      <td>{analysis.object_id_in_image}</td>
+                      <td>{analysis.area_px2.toFixed(2)}</td>
+                      <td>{analysis.width_px.toFixed(2)}</td>
+                      <td>{analysis.length_px.toFixed(2)}</td>
+                      <td>{analysis.volume_px3.toFixed(2)}</td>
+                      <td>{analysis.area_in2.toFixed(2)}</td>
+                      <td>{analysis.weight_oz.toFixed(2)}</td>
+                      <td className={`grade-${analysis.grade.replace(/\s+/g, '-').toLowerCase()}`}>
+                        {analysis.grade}
+                      </td>
+                      <td>{analysis.lw_ratio.toFixed(2)}</td>
+                      <td>{analysis.solidity.toFixed(3)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {!loadingAnalyses && userAnalyses.length === 0 && !analysesError && (
+          <div className="no-files-message">
+            <div className="no-files-title">
+              📊 No analysis data found
+            </div>
+            <div className="no-files-subtitle">
+              Process images to see your analysis data here.
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
-}
+})
+
+FileDisplay.displayName = 'FileDisplay'
 
 export default FileDisplay
