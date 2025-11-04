@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { getUserImages } from '../services/ImageService'
 
 interface OutputFile {
   filename: string;
@@ -14,7 +15,11 @@ interface CSVData {
   status: string;
 }
 
-const FileDisplay = () => {
+interface FileDisplayProps {
+  userId: number;
+}
+
+const FileDisplay = ({ userId }: FileDisplayProps) => {
   const [files, setFiles] = useState<OutputFile[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -24,14 +29,23 @@ const FileDisplay = () => {
   const fetchOutputFiles = async () => {
     setLoading(true)
     setError(null)
-    
+
     try {
+      // First, get the list of image names for this user from the database
+      const userImagesResponse = await getUserImages(userId)
+      const userImageNames = new Set(userImagesResponse.images.map(img => img.image_name))
+
+      // Then, get all output files from the backend
       const response = await fetch('http://localhost:8000/output/files')
     // const response = await fetch('http://34.134.92.145:8000/output/files')
-      
+
       if (response.ok) {
         const result = await response.json()
-        setFiles(result.files || [])
+        // Filter to only show files that belong to this user
+        const userFiles = (result.files || []).filter((file: OutputFile) =>
+          userImageNames.has(file.filename)
+        )
+        setFiles(userFiles)
       } else {
         const errorData = await response.json()
         setError(`Error: ${errorData.detail}`)

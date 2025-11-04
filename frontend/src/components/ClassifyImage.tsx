@@ -1,5 +1,6 @@
 import { useState, forwardRef, useImperativeHandle } from 'react'
 import './ClassifyImage.css'
+import { addImageMatch } from '../services/ImageService'
 
 interface ClassificationResult {
   message: string;
@@ -16,10 +17,11 @@ export interface ClassifyImageRef {
 }
 
 interface ClassifyImageProps {
+  userId: number;
   onClearComplete?: () => void;
 }
 
-const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ onClearComplete }, ref) => {
+const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ userId, onClearComplete }, ref) => {
   const [classifying, setClassifying] = useState(false)
   const [result, setResult] = useState<ClassificationResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -53,6 +55,21 @@ const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ onClea
             // Notify parent to clear frontend files
             if (onClearComplete) {
               onClearComplete()
+            }
+
+            // Add image matches to database for processed files
+            if (classificationResult.processed_files && classificationResult.processed_files.length > 0) {
+              for (const fileName of classificationResult.processed_files) {
+                try {
+                  // The output files have 'masked_' prefix added to the original filename
+                  const maskedFileName = `masked_${fileName}`
+                  await addImageMatch(maskedFileName, userId)
+                  console.log(`Added image match for ${maskedFileName}`)
+                } catch (matchError) {
+                  console.error(`Failed to add image match for ${fileName}:`, matchError)
+                  // Don't show error to user, just log it
+                }
+              }
             }
           } catch (clearError) {
             console.error('Failed to clear input directory:', clearError)

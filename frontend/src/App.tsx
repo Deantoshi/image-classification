@@ -82,10 +82,10 @@ function App() {
         <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} />
 
         <div ref={classifyImageSectionRef}>
-          <ClassifyImage ref={classifyImageRef} onClearComplete={handleClearComplete} />
+          <ClassifyImage ref={classifyImageRef} userId={user.id} onClearComplete={handleClearComplete} />
         </div>
 
-        <FileDisplay />
+        <FileDisplay userId={user.id} />
 
         <div className="getting-started">
           <h3 className="section-title">
