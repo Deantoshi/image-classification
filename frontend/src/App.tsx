@@ -5,6 +5,7 @@ import FileUpload, { FileUploadRef } from './components/FileUpload'
 import ClassifyImage, { ClassifyImageRef } from './components/ClassifyImage'
 import FileDisplay, { FileDisplayRef } from './components/FileDisplay'
 import AdminView from './components/AdminView'
+import PopUpInstructions from './components/PopUpInstructions'
 
 function App() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
@@ -94,6 +95,7 @@ function App() {
   return (
     <>
       <div className="app-container">
+        <PopUpInstructions userId={user.id} />
         <div className="header-section">
           <div className="header-content">
             <h1 className="main-title">
