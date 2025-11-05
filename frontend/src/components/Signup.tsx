@@ -94,7 +94,7 @@ function Signup({ onSignupComplete }: SignupProps) {
             <div className="welcome-back-message">
               <span className="welcome-icon">👋</span>
               <p>Welcome back, <strong>{existingUser.name}</strong>!</p>
-              <p className="welcome-subtext">We found your account in our fields</p>
+              <p className="welcome-subtext">Please enter a different name if you haven't entered this name previously!</p>
             </div>
           )}
 
@@ -124,7 +124,7 @@ function Signup({ onSignupComplete }: SignupProps) {
               onClick={handleContinue}
               className="continue-button"
             >
-              <span className="button-icon">✓</span>
+              <span className="button-icon">⚠️</span>
               Continue
             </button>
           )}
