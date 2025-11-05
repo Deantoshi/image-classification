@@ -8,6 +8,7 @@ import AdminView from './components/AdminView'
 
 function App() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
+  const [isClassifying, setIsClassifying] = useState(false)
   const classifyImageRef = useRef<ClassifyImageRef>(null)
   const classifyImageSectionRef = useRef<HTMLDivElement>(null)
   const fileUploadRef = useRef<FileUploadRef>(null)
@@ -38,6 +39,9 @@ function App() {
   }
 
   const handleUploadComplete = () => {
+    // Set classifying state to true when starting classification
+    setIsClassifying(true)
+
     // Trigger classification automatically
     if (classifyImageRef.current) {
       classifyImageRef.current.classify()
@@ -73,6 +77,9 @@ function App() {
         block: 'start'
       })
     }
+
+    // Set classifying state to false when classification is complete
+    setIsClassifying(false)
   }
 
   if (!user) {
@@ -103,7 +110,7 @@ function App() {
           </button>
         </div>
 
-        <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} />
+        <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} isClassifying={isClassifying} />
 
         <div ref={classifyImageSectionRef}>
           <ClassifyImage

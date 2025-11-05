@@ -9,13 +9,14 @@ interface UploadResponse {
 
 interface FileUploadProps {
   onUploadComplete?: () => void;
+  isClassifying?: boolean;
 }
 
 export interface FileUploadRef {
   clearFiles: () => void;
 }
 
-const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplete }, ref) => {
+const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplete, isClassifying = false }, ref) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadResult, setUploadResult] = useState<string | null>(null)
@@ -80,7 +81,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
 
   const triggerFileInput = () => {
     const fileInput = document.getElementById('file-input') as HTMLInputElement
-    if (fileInput && !uploading) {
+    if (fileInput && !uploading && !isClassifying) {
       fileInput.click()
     }
   }
@@ -171,13 +172,13 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
         multiple
         accept="image/*"
         onChange={handleFileSelect}
-        disabled={uploading}
+        disabled={uploading || isClassifying}
         className="file-input-hidden"
       />
 
       {/* Plus sign upload area */}
       <div
-        className={`upload-trigger ${uploading ? 'disabled' : ''}`}
+        className={`upload-trigger ${uploading || isClassifying ? 'disabled' : ''}`}
         onClick={triggerFileInput}
         role="button"
         tabIndex={0}
@@ -220,7 +221,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
                   <button
                     className="preview-delete-button"
                     onClick={() => removeFile(index)}
-                    disabled={uploading}
+                    disabled={uploading || isClassifying}
                     aria-label={`Remove ${file.name}`}
                   >
                     ✕
@@ -239,7 +240,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
                 <button
                   className="delete-file-button"
                   onClick={() => removeFile(index)}
-                  disabled={uploading}
+                  disabled={uploading || isClassifying}
                   aria-label={`Remove ${file.name}`}
                 >
                   ✕
@@ -253,10 +254,10 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
       <div className="button-group">
         <button
           onClick={handleUpload}
-          disabled={!selectedFiles || uploading}
+          disabled={!selectedFiles || uploading || isClassifying}
           className="upload-button"
         >
-          {uploading ? '⏳ Uploading...' : '📤 Classify Images'}
+          {uploading ? '⏳ Uploading...' : isClassifying ? '🔄 Processing...' : '📤 Classify Images'}
         </button>
       </div>
 
