@@ -24,8 +24,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
-        "http://34.134.92.145:5173",  # Add your VM's IP
-        "http://34.134.92.145:3000"  # Add your VM's IP],  # Vite and Create React App default ports
+        "http://34.31.3.46:5173",  # Add your VM's IP
+        "http://34.31.3.46:3000"  # Add your VM's IP
     ],
     allow_credentials=True,
     allow_methods=["*"],
