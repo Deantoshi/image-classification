@@ -18,7 +18,7 @@ export interface GetOrCreateNameResponse {
  */
 export const getOrCreateName = async (name: string): Promise<GetOrCreateNameResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/get-or-create-name`, {
+    const response = await fetch(`${API_BASE_URL}/api/get-or-create-name`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
