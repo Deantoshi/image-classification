@@ -37,6 +37,8 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
   const [analysesError, setAnalysesError] = useState<string | null>(null)
   const [analysesTableExpanded, setAnalysesTableExpanded] = useState(true)
 
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_BASE_API_URL || 'http://localhost:8000'
+
   // Automatically fetch output files and user analyses when component mounts or userId changes
   useEffect(() => {
     fetchOutputFiles()
@@ -53,8 +55,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
       const userImageNames = new Set(userImagesResponse.images.map(img => img.image_name))
 
       // Then, get all output files from the backend
-      const response = await fetch('http://localhost:8000/output/files')
-    // const response = await fetch('http://34.134.92.145:8000/output/files')
+      const response = await fetch(`${API_BASE_URL}/output/files`)
 
       if (response.ok) {
         const result = await response.json()
@@ -86,8 +87,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
 
   const fetchCSVContent = async (filename: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/output/csv/${filename}`)
-    // const response = await fetch(`http://34.134.92.145:8000/output/csv/${filename}`)
+      const response = await fetch(`${API_BASE_URL}/output/csv/${filename}`)
 
       if (response.ok) {
         const csvContent = await response.json()
@@ -231,8 +231,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
       const filename = 'combined_analysis_with_grades.csv'
 
       // Fetch the CSV content
-      const response = await fetch(`http://localhost:8000/output/csv/${filename}`)
-      // const response = await fetch(`http://34.134.92.145:8000/output/csv/${filename}`)
+      const response = await fetch(`${API_BASE_URL}/output/csv/${filename}`)
 
       if (response.ok) {
         const csvContent = await response.json()
@@ -334,8 +333,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
     return (
       <div className="image-container">
         <img
-          src={`http://localhost:8000/output/file/${filename}`}
-        // src={`http://34.134.92.145:8000/output/file/${filename}`}
+          src={`${API_BASE_URL}/output/file/${filename}`}
           alt={filename}
           className="output-image"
           onError={(e) => {
@@ -395,8 +393,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
                   {file.type === 'other' && (
                     <div className="download-link-container">
                       <a
-                        href={`http://localhost:8000/output/file/${file.filename}`}
-                        // href={`http://34.134.92.145:8000/output/file/${file.filename}`}
+                        href={`${API_BASE_URL}/output/file/${file.filename}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="download-link"

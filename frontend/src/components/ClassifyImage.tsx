@@ -27,14 +27,15 @@ const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ userId
   const [result, setResult] = useState<ClassificationResult | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_BASE_API_URL || 'http://localhost:8000'
+
   const handleClassify = async () => {
     setClassifying(true)
     setResult(null)
     setError(null)
 
     try {
-      const response = await fetch('http://localhost:8000/classify', {
-    // const response = await fetch('http://34.134.92.145:8000/classify', {
+      const response = await fetch(`${API_BASE_URL}/classify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +49,7 @@ const ClassifyImage = forwardRef<ClassifyImageRef, ClassifyImageProps>(({ userId
         // Clear input directory after successful classification
         if (classificationResult.status === 'success') {
           try {
-            await fetch('http://localhost:8000/clear-all-input', {
+            await fetch(`${API_BASE_URL}/clear-all-input`, {
               method: 'DELETE',
             })
             console.log('Input directory cleared successfully')

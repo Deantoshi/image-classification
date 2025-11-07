@@ -24,6 +24,8 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
   const [showPreviews, setShowPreviews] = useState(false)
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
 
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_BASE_API_URL || 'http://localhost:8000'
+
   // Create preview URLs when files are selected
   useEffect(() => {
     if (!selectedFiles || selectedFiles.length === 0) {
@@ -101,8 +103,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
         formData.append('files', selectedFiles[i])
       }
 
-      const response = await fetch('http://localhost:8000/upload', {
-    // const response = await fetch('http://34.134.92.145:8000/upload', {
+      const response = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
         body: formData,
       })

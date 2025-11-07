@@ -38,7 +38,7 @@ export const addImageMatch = async (
   user_id: number
 ): Promise<AddImageMatchResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/add-image-match`, {
+    const response = await fetch(`${API_BASE_URL}/api/add-image-match`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const addImageMatch = async (
  */
 export const getUserImages = async (user_id: number): Promise<GetUserImagesResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/get-user-images`, {
+    const response = await fetch(`${API_BASE_URL}/api/get-user-images`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -42,7 +42,7 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
   const [images, setImages] = useState<ImageInfo[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const API_BASE_URL = 'http://localhost:8000';
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_BASE_API_URL || 'http://localhost:8000';
 
   useEffect(() => {
     loadTables();
