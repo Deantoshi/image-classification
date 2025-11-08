@@ -7,6 +7,7 @@ body {
   margin: 0;
   padding: 0;
   background: linear-gradient(135deg, #d4a574 0%, #8b6f47 100%);
+  background-attachment: fixed;
   color: #5d4e37;
   font-family: 'Georgia', serif;
   min-height: 100vh;
