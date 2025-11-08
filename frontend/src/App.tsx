@@ -7,6 +7,7 @@ import FileDisplay, { FileDisplayRef } from './components/FileDisplay'
 import AdminView from './components/AdminView'
 import PopUpInstructions from './components/PopUpInstructions'
 import PictureInstructions from './components/PictureInstructions'
+import ResultSummaryTable from './components/ResultSummaryTable'
 import { ScenarioProvider } from './context/ScenarioContext'
 
 function App() {
@@ -130,6 +131,8 @@ function App() {
         <div ref={fileDisplaySectionRef}>
           <FileDisplay ref={fileDisplayRef} userId={user.id} />
         </div>
+
+        <ResultSummaryTable userId={user.id} />
 
       </div>
     </ScenarioProvider>
