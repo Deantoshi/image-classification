@@ -103,6 +103,39 @@
   white-space: nowrap;
 }
 
+/* Tablet Design (2000 × 1200) */
+@media (min-width: 1200px) and (max-width: 2000px) {
+  .scenario-toggle-container {
+    margin-top: 35px;
+    gap: 16px;
+  }
+
+  .scenario-warning {
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    border-width: 3px;
+  }
+
+  .scenario-toggle-wrapper {
+    gap: 20px;
+    padding: 10px;
+    border-radius: 18px;
+    border-width: 3px;
+  }
+
+  .scenario-toggle-option {
+    padding: 16px 32px;
+    border-width: 3px;
+    border-radius: 14px;
+    font-size: 1.2rem;
+  }
+
+  .scenario-icon {
+    font-size: 1.6rem;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .scenario-toggle-wrapper {
