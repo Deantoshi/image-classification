@@ -12,6 +12,7 @@ from routes.user_routes import router as user_router
 from routes.image_routes import router as image_router
 from routes.user_analysis_routes import router as user_analysis_router
 from routes.admin_routes import router as admin_router
+from routes.user_profit_routes import router as user_profit_router
 
 app = FastAPI()
 
@@ -37,6 +38,7 @@ app.include_router(user_router, prefix="/api", tags=["users"])
 app.include_router(image_router, prefix="/api", tags=["images"])
 app.include_router(user_analysis_router, prefix="/api", tags=["user-analysis"])
 app.include_router(admin_router, prefix="/api", tags=["admin"])
+app.include_router(user_profit_router, prefix="/api", tags=["user-profit"])
 
 # Ensure the input and output directories exist
 INPUT_DIR = "input"

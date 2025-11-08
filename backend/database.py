@@ -62,6 +62,26 @@ def init_db():
         )
     ''')
 
+    # Create user_profit table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS user_profit (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL UNIQUE,
+            scenario INTEGER NOT NULL,
+            total_profit REAL,
+            total_revenue REAL,
+            total_penalty REAL,
+            marketable_proportion REAL,
+            not_marketable_proportion REAL,
+            total_classifications INTEGER,
+            total_marketable_classifications INTEGER,
+            total_not_marketable_classifications INTEGER,
+            total_marketable_revenue REAL,
+            total_not_marketable_revenue REAL,
+            FOREIGN KEY (user_id) REFERENCES user (id)
+        )
+    ''')
+
     conn.commit()
     conn.close()
 
@@ -106,6 +126,70 @@ def delete_user(user_id):
     rows_affected = cursor.rowcount
     conn.close()
     return rows_affected
+
+
+def save_user_profit(user_id, scenario, profit_data):
+    """Save or update user profit data. Uses REPLACE to avoid duplicates."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT OR REPLACE INTO user_profit (
+            user_id, scenario, total_profit, total_revenue, total_penalty,
+            marketable_proportion, not_marketable_proportion,
+            total_classifications, total_marketable_classifications,
+            total_not_marketable_classifications, total_marketable_revenue,
+            total_not_marketable_revenue
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        user_id,
+        scenario,
+        profit_data.get('total_profit'),
+        profit_data.get('total_revenue'),
+        profit_data.get('total_penalty'),
+        profit_data.get('marketable_proportion'),
+        profit_data.get('not_marketable_proportion'),
+        profit_data.get('total_classifications'),
+        profit_data.get('total_marketable_classifications'),
+        profit_data.get('total_not_marketable_classifications'),
+        profit_data.get('total_marketable_revenue'),
+        profit_data.get('total_not_marketable_revenue')
+    ))
+    conn.commit()
+    profit_id = cursor.lastrowid
+    conn.close()
+    return profit_id
+
+
+def get_user_profit(user_id, scenario=None):
+    """Get user profit data by user ID and optionally scenario."""
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    if scenario is not None:
+        cursor.execute('''
+            SELECT id, user_id, scenario, total_profit, total_revenue, total_penalty,
+                   marketable_proportion, not_marketable_proportion,
+                   total_classifications, total_marketable_classifications,
+                   total_not_marketable_classifications, total_marketable_revenue,
+                   total_not_marketable_revenue
+            FROM user_profit
+            WHERE user_id = ? AND scenario = ?
+        ''', (user_id, scenario))
+        profit = cursor.fetchone()
+    else:
+        cursor.execute('''
+            SELECT id, user_id, scenario, total_profit, total_revenue, total_penalty,
+                   marketable_proportion, not_marketable_proportion,
+                   total_classifications, total_marketable_classifications,
+                   total_not_marketable_classifications, total_marketable_revenue,
+                   total_not_marketable_revenue
+            FROM user_profit
+            WHERE user_id = ?
+        ''', (user_id,))
+        profit = cursor.fetchall()
+
+    conn.close()
+    return profit
 
 
 # Initialize the database when the module is imported

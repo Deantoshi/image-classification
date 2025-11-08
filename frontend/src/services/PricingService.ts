@@ -1,5 +1,7 @@
 import { getUserAnalyses, AnalysisRecord } from './UserAnalysis';
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_BASE_API_URL || 'http://localhost:8000';
+
 // Static pricing constants
 export const MARKETABLE_RATIO = 0.35;
 export const NOT_MARKETABLE_RATIO = 0.65;
@@ -29,6 +31,52 @@ export interface PricingSummary {
  */
 const isMarketable = (analysis: AnalysisRecord): boolean => {
   return analysis.grade === 'Marketable';
+};
+
+/**
+ * Saves profit data to the backend database.
+ * Prevents duplicate rows by using unique constraint on (user_id, scenario).
+ */
+const saveProfitData = async (
+  user_id: number,
+  scenario: Scenario,
+  pricingSummary: PricingSummary
+): Promise<void> => {
+  try {
+    // Convert scenario from 'bin' | 'conveyor' to 1 | 2
+    const scenarioNumber = scenario === 'bin' ? 1 : 2;
+
+    const response = await fetch(`${API_BASE_URL}/api/save-profit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id,
+        scenario: scenarioNumber,
+        total_profit: pricingSummary.total_profit,
+        total_revenue: pricingSummary.total_revenue,
+        total_penalty: pricingSummary.total_penalty,
+        marketable_proportion: pricingSummary.marketable_proportion,
+        not_marketable_proportion: pricingSummary.not_marketable_proportion,
+        total_classifications: pricingSummary.total_classifications,
+        total_marketable_classifications: pricingSummary.total_marketable_classifications,
+        total_not_marketable_classifications: pricingSummary.total_not_marketable_classifications,
+        total_marketable_revenue: pricingSummary.total_marketable_revenue,
+        total_not_marketable_revenue: pricingSummary.total_not_marketable_revenue,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+    }
+
+    await response.json();
+  } catch (error) {
+    console.error('Error saving profit data:', error);
+    throw error;
+  }
 };
 
 /**
@@ -89,7 +137,7 @@ export const calculatePricingSummary = async (
     const total_revenue = total_marketable_revenue + total_not_marketable_revenue;
     const total_profit = total_revenue - total_penalty;
 
-    return {
+    const summary = {
       total_profit,
       total_revenue,
       total_penalty,
@@ -101,6 +149,11 @@ export const calculatePricingSummary = async (
       total_marketable_revenue,
       total_not_marketable_revenue,
     };
+
+    // Save profit data to database
+    await saveProfitData(user_id, scenario, summary);
+
+    return summary;
   } catch (error) {
     console.error('Error calculating pricing summary:', error);
     throw error;
