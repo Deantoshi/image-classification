@@ -428,6 +428,86 @@
   font-family: 'Georgia', serif;
 }
 
+/* Tablet Design (2000 × 1200) */
+@media (min-width: 1200px) and (max-width: 2000px) {
+  .file-upload-card {
+    padding: 35px 40px;
+    margin-top: 30px;
+  }
+
+  .upload-trigger {
+    width: 280px;
+    height: 280px;
+    border-width: 5px;
+  }
+
+  .plus-icon {
+    font-size: 6rem;
+  }
+
+  .upload-trigger-text {
+    font-size: 1.3rem;
+  }
+
+  .selected-files-container {
+    padding: 20px;
+    max-width: 800px;
+  }
+
+  .selected-files-title {
+    font-size: 1.15rem;
+  }
+
+  .toggle-previews-button {
+    padding: 8px 16px;
+    font-size: 1.05rem;
+  }
+
+  .image-previews-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .preview-image {
+    height: 150px;
+  }
+
+  .preview-filename {
+    font-size: 0.9rem;
+  }
+
+  .upload-button,
+  .clear-button {
+    padding: 16px 32px;
+    font-size: 1.15rem;
+  }
+
+  .button-group {
+    gap: 16px;
+    max-width: 800px;
+  }
+
+  .result-message {
+    padding: 20px;
+    font-size: 1.1rem;
+    max-width: 800px;
+  }
+
+  .uploaded-files-container {
+    padding: 20px;
+    max-width: 800px;
+  }
+
+  .uploaded-files-title {
+    font-size: 1.15rem;
+  }
+
+  .uploaded-files-list {
+    font-size: 1.05rem;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .file-upload-card {

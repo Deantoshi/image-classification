@@ -318,6 +318,105 @@
   font-weight: 500;
 }
 
+/* Tablet Design (2000 × 1200) */
+@media (min-width: 1200px) and (max-width: 2000px) {
+  .signup-container {
+    padding: 30px;
+  }
+
+  .signup-card {
+    padding: 60px 50px;
+    max-width: 650px;
+  }
+
+  .wheat-icon {
+    font-size: 5rem;
+    margin-bottom: 25px;
+  }
+
+  .signup-title {
+    font-size: 3rem;
+    margin-bottom: 15px;
+  }
+
+  .signup-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+  }
+
+  .signup-form {
+    gap: 25px;
+  }
+
+  .input-label {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+
+  .username-input {
+    padding: 18px 24px;
+    font-size: 1.3rem;
+    border-width: 4px;
+  }
+
+  .error-message {
+    padding: 16px 20px;
+    font-size: 1.1rem;
+  }
+
+  .error-icon {
+    font-size: 1.5rem;
+  }
+
+  .welcome-back-message {
+    padding: 25px;
+    border-width: 3px;
+  }
+
+  .welcome-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+
+  .welcome-back-message p {
+    font-size: 1.3rem;
+  }
+
+  .welcome-subtext {
+    font-size: 1.05rem !important;
+  }
+
+  .submit-button,
+  .continue-button {
+    padding: 20px 40px;
+    font-size: 1.4rem;
+    border-width: 4px;
+  }
+
+  .button-icon {
+    font-size: 1.6rem;
+  }
+
+  .loading-spinner {
+    width: 24px;
+    height: 24px;
+    border-width: 4px;
+  }
+
+  .farm-footer {
+    margin-top: 35px;
+    padding-top: 25px;
+  }
+
+  .footer-icon {
+    font-size: 1.4rem;
+  }
+
+  .footer-text {
+    font-size: 1.1rem;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .signup-card {

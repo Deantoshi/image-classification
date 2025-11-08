@@ -350,6 +350,111 @@
   font-size: 1.5rem;
 }
 
+/* Tablet Design (2000 × 1200) */
+@media (min-width: 1200px) and (max-width: 2000px) {
+  .summary-container {
+    margin: 50px auto;
+    max-width: 1100px;
+    padding: 30px;
+  }
+
+  .summary-card {
+    padding: 50px;
+  }
+
+  .wheat-icon {
+    font-size: 3.5rem;
+  }
+
+  .summary-title {
+    font-size: 2.6rem;
+  }
+
+  .summary-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+  }
+
+  .balance-sheet {
+    padding: 30px;
+  }
+
+  .sheet-section {
+    margin-bottom: 30px;
+  }
+
+  .section-header {
+    font-size: 1.3rem;
+    padding: 12px 18px;
+    letter-spacing: 2px;
+  }
+
+  .sheet-row {
+    padding: 14px 18px;
+  }
+
+  .parent-row {
+    padding: 16px 18px;
+  }
+
+  .child-row {
+    padding: 12px 18px 12px 60px;
+    font-size: 1.05rem;
+  }
+
+  .row-label {
+    font-size: 1.2rem;
+  }
+
+  .row-icon {
+    font-size: 1.4rem;
+    width: 28px;
+  }
+
+  .note-text {
+    font-size: 0.95rem;
+  }
+
+  .row-value {
+    font-size: 1.25rem;
+    min-width: 140px;
+  }
+
+  .total-section {
+    margin-top: 35px;
+    padding-top: 30px;
+  }
+
+  .total-row {
+    padding: 22px 18px;
+    font-size: 1.3rem;
+  }
+
+  .total-row .row-label,
+  .total-row .row-value {
+    font-size: 1.45rem;
+  }
+
+  .farm-footer {
+    margin-top: 35px;
+    padding-top: 25px;
+  }
+
+  .footer-icon {
+    font-size: 1.4rem;
+  }
+
+  .footer-text {
+    font-size: 1.1rem;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border-width: 5px;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .summary-card {

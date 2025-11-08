@@ -245,6 +245,68 @@
   font-style: italic;
 }
 
+/* Tablet Design (2000 × 1200) */
+@media (min-width: 1200px) and (max-width: 2000px) {
+  .classify-card {
+    padding: 40px 50px;
+    margin-top: 30px;
+  }
+
+  .classify-title {
+    font-size: 2.2rem;
+  }
+
+  .classify-description {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+  }
+
+  .classify-button {
+    padding: 20px 40px;
+    font-size: 1.4rem;
+  }
+
+  .classify-error {
+    padding: 20px;
+    font-size: 1.05rem;
+  }
+
+  .classify-result strong {
+    font-size: 1.3rem;
+  }
+
+  .result-details {
+    font-size: 1.1rem;
+  }
+
+  .output-label {
+    font-size: 1.1rem;
+  }
+
+  .output-content {
+    font-size: 1.05rem;
+    padding: 20px;
+    max-height: 350px;
+  }
+
+  .next-step-info {
+    padding: 22px;
+    font-size: 1.1rem;
+  }
+
+  .processing-message {
+    padding: 30px;
+  }
+
+  .processing-title {
+    font-size: 1.5rem;
+  }
+
+  .processing-subtitle {
+    font-size: 1.05rem;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .classify-card {

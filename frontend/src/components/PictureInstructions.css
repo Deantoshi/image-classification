@@ -132,6 +132,71 @@
   font-weight: 700;
 }
 
+/* Tablet Design (2000 × 1200) */
+@media (min-width: 1200px) and (max-width: 2000px) {
+  .picture-instructions-container {
+    padding: 30px;
+    margin-bottom: 40px;
+  }
+
+  .picture-instructions-card {
+    padding: 40px 50px;
+    max-width: 1200px;
+  }
+
+  .picture-instructions-title {
+    font-size: 2.5rem;
+  }
+
+  .picture-instructions-intro {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+  }
+
+  .scenarios-section {
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+
+  .scenario-card {
+    min-width: 350px;
+    padding: 25px;
+  }
+
+  .scenario-title {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+
+  .scenario-list {
+    font-size: 1.15rem;
+    line-height: 2;
+  }
+
+  .scenario-list li {
+    margin-bottom: 10px;
+  }
+
+  .requirements-section {
+    padding: 25px;
+    margin-top: 25px;
+  }
+
+  .requirements-title {
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+  }
+
+  .requirements-list {
+    font-size: 1.2rem;
+    line-height: 2;
+  }
+
+  .requirements-list li {
+    margin-bottom: 12px;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .picture-instructions-card {

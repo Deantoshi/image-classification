@@ -394,6 +394,84 @@
   color: #c62828;
 }
 
+/* Tablet Design (2000 × 1200) */
+@media (min-width: 1200px) and (max-width: 2000px) {
+  .file-display-card {
+    padding: 35px 40px;
+    margin-top: 30px;
+  }
+
+  .file-display-title {
+    font-size: 1.7rem;
+  }
+
+  .view-output-button {
+    padding: 16px 32px;
+    font-size: 1.15rem;
+  }
+
+  .files-count {
+    font-size: 1.1rem;
+  }
+
+  .file-name {
+    font-size: 1.15rem;
+  }
+
+  .file-size {
+    font-size: 1rem;
+  }
+
+  .csv-table {
+    font-size: 1rem;
+  }
+
+  .csv-table th {
+    padding: 14px;
+    font-size: 1.1rem;
+  }
+
+  .csv-table td {
+    padding: 12px;
+  }
+
+  .output-image {
+    max-height: 700px;
+  }
+
+  .download-link {
+    font-size: 1.15rem;
+    padding: 16px 32px;
+  }
+
+  .user-analyses-section {
+    margin-top: 50px;
+    padding-top: 50px;
+  }
+
+  .analyses-table {
+    font-size: 0.95rem;
+    min-width: 1400px;
+  }
+
+  .analyses-table th {
+    padding: 14px 10px;
+    font-size: 1rem;
+  }
+
+  .analyses-table td {
+    padding: 12px 10px;
+  }
+
+  .no-files-title {
+    font-size: 1.3rem;
+  }
+
+  .no-files-subtitle {
+    font-size: 1.05rem;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .file-display-card {
