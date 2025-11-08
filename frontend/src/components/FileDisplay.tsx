@@ -160,6 +160,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
           const areaIn2 = parseFloat(row[headerMap['area_in2']] || '0')
           const weightOz = parseFloat(row[headerMap['weight_oz']] || '0')
           const grade = row[headerMap['Grade']] || '' // Note: CSV uses 'Grade' with capital G
+          const priceUsd = parseFloat(row[headerMap['Price USD']] || '0')
 
           // Call addAnalysis API
           await addAnalysis({
@@ -180,6 +181,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
             area_in2: areaIn2,
             weight_oz: weightOz,
             grade: grade,
+            price_usd: priceUsd,
             user_id: userId
           })
           addedCount++
@@ -462,6 +464,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
                         <th>Area (in²)</th>
                         <th>Weight (oz)</th>
                         <th>Grade</th>
+                        <th>Price (USD)</th>
                         <th>L/W Ratio</th>
                         <th>Solidity</th>
                       </tr>
@@ -481,6 +484,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
                           <td className={`grade-${analysis.grade.replace(/\s+/g, '-').toLowerCase()}`}>
                             {analysis.grade}
                           </td>
+                          <td>${analysis.price_usd.toFixed(3)}</td>
                           <td>{analysis.lw_ratio.toFixed(2)}</td>
                           <td>{analysis.solidity.toFixed(3)}</td>
                         </tr>

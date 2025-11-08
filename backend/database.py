@@ -55,6 +55,7 @@ def init_db():
             lw_ratio REAL,
             area_in2 REAL,
             weight_oz REAL,
+            price_usd REAL,
             grade TEXT,
             user_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES user (id)

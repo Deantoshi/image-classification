@@ -175,7 +175,7 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
   const quickQueries = [
     { label: 'All Users', query: 'SELECT * FROM user' },
     { label: 'All Images', query: 'SELECT * FROM image_match' },
-    { label: 'All Analysis Data', query: 'SELECT ua.object_id, ua.user_id, u.name as user_name, ua.image_name, ua.object_id_in_image, ua.area_px2, ua.top_left_x, ua.top_left_y, ua.bottom_right_x, ua.bottom_right_y, ua.center, ua.width_px, ua.length_px, ua.volume_px3, ua.solidity, ua.strict_solidity, ua.lw_ratio, ua.area_in2, ua.weight_oz, ua.grade FROM user_analysis ua LEFT JOIN user u ON ua.user_id = u.id' },
+    { label: 'All Analysis Data', query: 'SELECT ua.object_id, ua.user_id, u.name as user_name, ua.image_name, ua.object_id_in_image, ua.area_px2, ua.top_left_x, ua.top_left_y, ua.bottom_right_x, ua.bottom_right_y, ua.center, ua.width_px, ua.length_px, ua.volume_px3, ua.solidity, ua.strict_solidity, ua.lw_ratio, ua.area_in2, ua.weight_oz, ua.grade, ua.price_usd FROM user_analysis ua LEFT JOIN user u ON ua.user_id = u.id' },
     { label: 'User Count', query: 'SELECT COUNT(*) as user_count FROM user' },
     { label: 'Images per User', query: 'SELECT u.name, COUNT(im.image_id) as image_count FROM user u LEFT JOIN image_match im ON u.id = im.user_id GROUP BY u.id, u.name' },
     { label: 'Analysis Summary', query: 'SELECT image_name, COUNT(*) as object_count, AVG(area_px2) as avg_area FROM user_analysis GROUP BY image_name' },

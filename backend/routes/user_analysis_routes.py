@@ -28,6 +28,7 @@ class AddAnalysisRequest(BaseModel):
     lw_ratio: float
     area_in2: float
     weight_oz: float
+    price_usd: float
     grade: str
     user_id: int
 
@@ -54,6 +55,7 @@ class AnalysisRecord(BaseModel):
     lw_ratio: float
     area_in2: float
     weight_oz: float
+    price_usd: float
     grade: str
     user_id: int
 
@@ -81,6 +83,7 @@ async def add_analysis_endpoint(request: AddAnalysisRequest):
             lw_ratio=request.lw_ratio,
             area_in2=request.area_in2,
             weight_oz=request.weight_oz,
+            price_usd=request.price_usd,
             grade=request.grade,
             user_id=request.user_id
         )
@@ -124,8 +127,9 @@ async def get_user_analyses_endpoint(request: GetUserAnalysesRequest):
                 "lw_ratio": analysis[14],
                 "area_in2": analysis[15],
                 "weight_oz": analysis[16],
-                "grade": analysis[17],
-                "user_id": analysis[18]
+                "price_usd": analysis[17],
+                "grade": analysis[18],
+                "user_id": analysis[19]
             })
 
         return {
@@ -168,8 +172,9 @@ async def get_all_user_analyses_endpoint():
                 "lw_ratio": analysis[14],
                 "area_in2": analysis[15],
                 "weight_oz": analysis[16],
-                "grade": analysis[17],
-                "user_id": analysis[18]
+                "price_usd": analysis[17],
+                "grade": analysis[18],
+                "user_id": analysis[19]
             })
 
         return {

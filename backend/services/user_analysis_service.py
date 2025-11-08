@@ -4,7 +4,7 @@ from database import get_connection
 def add_analysis(image_name, object_id_in_image, area_px2, top_left_x, top_left_y,
                  bottom_right_x, bottom_right_y, center, width_px, length_px,
                  volume_px3, solidity, strict_solidity, lw_ratio, area_in2,
-                 weight_oz, grade, user_id):
+                 weight_oz, price_usd, grade, user_id):
     """Add a new analysis record to the user_analysis table."""
     conn = get_connection()
     cursor = conn.cursor()
@@ -14,12 +14,12 @@ def add_analysis(image_name, object_id_in_image, area_px2, top_left_x, top_left_
             image_name, object_id_in_image, area_px2, top_left_x, top_left_y,
             bottom_right_x, bottom_right_y, center, width_px, length_px,
             volume_px3, solidity, strict_solidity, lw_ratio, area_in2,
-            weight_oz, grade, user_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            weight_oz, price_usd, grade, user_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (image_name, object_id_in_image, area_px2, top_left_x, top_left_y,
           bottom_right_x, bottom_right_y, center, width_px, length_px,
           volume_px3, solidity, strict_solidity, lw_ratio, area_in2,
-          weight_oz, grade, user_id))
+          weight_oz, price_usd, grade, user_id))
 
     conn.commit()
     analysis_id = cursor.lastrowid
@@ -36,7 +36,7 @@ def get_user_analyses(user_id):
         SELECT object_id, image_name, object_id_in_image, area_px2, top_left_x,
                top_left_y, bottom_right_x, bottom_right_y, center, width_px,
                length_px, volume_px3, solidity, strict_solidity, lw_ratio,
-               area_in2, weight_oz, grade, user_id
+               area_in2, weight_oz, price_usd, grade, user_id
         FROM user_analysis
         WHERE user_id = ?
         ORDER BY object_id
@@ -56,7 +56,7 @@ def get_all_analyses():
         SELECT object_id, image_name, object_id_in_image, area_px2, top_left_x,
                top_left_y, bottom_right_x, bottom_right_y, center, width_px,
                length_px, volume_px3, solidity, strict_solidity, lw_ratio,
-               area_in2, weight_oz, grade, user_id
+               area_in2, weight_oz, price_usd, grade, user_id
         FROM user_analysis
         ORDER BY object_id
     ''')

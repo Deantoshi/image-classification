@@ -19,6 +19,7 @@ export interface AnalysisRecord {
   area_in2: number;
   weight_oz: number;
   grade: string;
+  price_usd: number;
   user_id: number;
 }
 
@@ -40,6 +41,7 @@ export interface AddAnalysisRequest {
   area_in2: number;
   weight_oz: number;
   grade: string;
+  price_usd: number;
   user_id: number;
 }
 

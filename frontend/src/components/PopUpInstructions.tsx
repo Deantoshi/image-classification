@@ -33,7 +33,23 @@ function PopUpInstructions({ userId }: PopUpInstructionsProps) {
         </div>
         <div className="popup-content">
           <p className="popup-message">
-            Please take a picture 📸  of a sweetpotato 🍠 placed on the conveyer belt 🛤 picture from <strong>6 feet away</strong> and then come back here to upload and classify it!
+            You may choose to complete one of the following scenarios
+
+            Scenario 1:
+
+            Take a picture of the sweetpotatoes in the bin
+
+            Scenario 2:
+
+            Take the sweetpotatoes out of the box, laying them on the conveyor belt
+
+            Take a picture of the sweetpotatoes laid out on the conveyor belt
+
+            Requirements
+
+            Images must be in landscape orientation
+
+            Utilize the tape measure to make sure you are 6ft vertical distance from sweetpotatoes to camera
           </p>
         </div>
         <div className="popup-footer">

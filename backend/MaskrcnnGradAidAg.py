@@ -71,17 +71,24 @@ def check_cuda():
         print('CUDA is not available. Processing will use CPU and may be slow.')
         return "cpu"
 
+# def assign_grade(weight_oz):
+#     """Assigns a grade based on weight in ounces."""
+#     if weight_oz < 1.5: return 'Not Marketable'
+#     if weight_oz < 3:   return 'Not Marketable'
+#     if weight_oz < 5.3: return 'Not Marketable'
+#     if weight_oz < 10.6:return 'Medium'
+#     if weight_oz < 15.9:return 'Large 1'
+#     if weight_oz < 21.2:return 'Large 2'
+#     if weight_oz < 28.2:return 'Extra Large'
+#     return 'Not Marketable'
+
 def assign_grade(weight_oz):
     """Assigns a grade based on weight in ounces."""
-    if weight_oz < 1.5: return 'Not Marketable'
-    if weight_oz < 3:   return 'Not Marketable'
-    if weight_oz < 5.3: return 'Not Marketable'
-    if weight_oz < 10.6:return 'Medium'
-    if weight_oz < 15.9:return 'Large 1'
-    if weight_oz < 21.2:return 'Large 2'
-    if weight_oz < 28.2:return 'Extra Large'
-    return 'Not Marketable'
-
+    if 5.3 <= weight_oz < 28.2:
+        return 'Marketable'
+    else:
+        return 'Not Marketable'
+    
 def random_saturated_color():
     """Generates a random saturated color tuple (BGR)."""
     trip = [0, 255, random.randint(0, 255)]
@@ -295,6 +302,9 @@ def finalize_data_and_save(all_data_frames, output_dir):
         #combined_df["axiallength_in"] = combined_df["length_px"] * INCHES_PER_PIXEL
         #combined_df["maxdiameter_in"] = combined_df["width_px"] * INCHES_PER_PIXEL
         combined_df['Grade'] = combined_df['weight_oz'].apply(lambda x: assign_grade(x) if pd.notnull(x) else None)
+        
+        combined_df['Price USD'] = np.where(combined_df['Grade'] == 'Marketable', 0.56, 
+                                       np.where(combined_df['Grade'] == 'Not Marketable', 0.008, np.nan))
         
         csv_path = os.path.join(output_dir, 'combined_analysis_with_grades.csv')
 
