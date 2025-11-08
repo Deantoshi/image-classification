@@ -5,7 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_BACKEND_BASE_API_URL || 'http://localh
 // Static pricing constants
 export const MARKETABLE_RATIO = 0.35;
 export const NOT_MARKETABLE_RATIO = 0.65;
-export const PENALTY = 0.15;
+export const PENALTY = 15;
 export const MARKETABLE_PRICE = 0.56;
 export const NOT_MARKETABLE_PRICE = 0.008;
 export const FINAL_COUNT = 20;
@@ -175,8 +175,8 @@ export const calculatePricingSummary = async (
     // Calculate penalty
     let total_penalty = 0;
     if (scenario === 'bin') {
-      // Scenario 1 (bin): calculate penalty
-      total_penalty = Math.abs(userMarketableRatio - MARKETABLE_RATIO) * FINAL_COUNT * PENALTY;
+      // Scenario 1 (bin): calculate penalty           
+      total_penalty = Math.abs(userMarketableRatio - MARKETABLE_RATIO)  * PENALTY;
     } else {
       // Scenario 2 (conveyor): no penalty
       total_penalty = 0;
