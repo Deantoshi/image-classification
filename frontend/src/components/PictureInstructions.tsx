@@ -15,14 +15,14 @@ function PictureInstructions() {
 
           <div className="scenarios-section">
             <div className="scenario-card">
-              <h3 className="scenario-title">Scenario 1</h3>
+              <h3 className="scenario-title">📦 Scenario 1: Bin</h3>
               <ul className="scenario-list">
                 <li>Take a picture of the sweetpotatoes in the bin</li>
               </ul>
             </div>
 
             <div className="scenario-card">
-              <h3 className="scenario-title">Scenario 2</h3>
+              <h3 className="scenario-title">🏭 Scenario 2: Conveyer Belt</h3>
               <ul className="scenario-list">
                 <li>Take the sweetpotatoes out of the box, laying them on the conveyor belt</li>
                 <li>Take a picture of the sweetpotatoes laid out on the conveyor belt</li>

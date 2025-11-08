@@ -32,25 +32,34 @@ function PopUpInstructions({ userId }: PopUpInstructionsProps) {
           </button>
         </div>
         <div className="popup-content">
-          <p className="popup-message">
-            You may choose to complete one of the following scenarios
-
-            Scenario 1:
-
-            Take a picture of the sweetpotatoes in the bin
-
-            Scenario 2:
-
-            Take the sweetpotatoes out of the box, laying them on the conveyor belt
-
-            Take a picture of the sweetpotatoes laid out on the conveyor belt
-
-            Requirements
-
-            Images must be in landscape orientation
-
-            Utilize the tape measure to make sure you are 6ft vertical distance from sweetpotatoes to camera
+          <p className="popup-intro">
+            You may choose to complete one of the following scenarios:
           </p>
+
+          <div className="popup-scenarios-section">
+            <div className="popup-scenario-card">
+              <h3 className="popup-scenario-title">📦 Scenario 1: Bin</h3>
+              <ul className="popup-scenario-list">
+                <li>Take a picture of the sweetpotatoes in the bin</li>
+              </ul>
+            </div>
+
+            <div className="popup-scenario-card">
+              <h3 className="popup-scenario-title">🏭 Scenario 2: Conveyor Belt</h3>
+              <ul className="popup-scenario-list">
+                <li>Take the sweetpotatoes out of the box, laying them on the conveyor belt</li>
+                <li>Take a picture of the sweetpotatoes laid out on the conveyor belt</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="popup-requirements-section">
+            <h3 className="popup-requirements-title">Requirements</h3>
+            <ul className="popup-requirements-list">
+              <li>Images must be in <strong>landscape orientation</strong> (phone screen sideways NOT up and down)</li>
+              <li>Utilize the tape measurer to make sure you are <strong>6ft vertical distance</strong> from sweetpotatoes to camera</li>
+            </ul>
+          </div>
         </div>
         <div className="popup-footer">
           <button onClick={handleClose} className="popup-button">
