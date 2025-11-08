@@ -69,6 +69,12 @@ function ResultSummaryTable({ userId }: ResultSummaryTableProps) {
     return `${(value * 100).toFixed(1)}%`
   }
 
+  const getProfitClass = (profit: number) => {
+    if (profit > 0) return 'profit-positive'
+    if (profit < 0) return 'profit-negative'
+    return 'profit-zero'
+  }
+
   return (
     <div className="summary-container">
       <div className="grain-background"></div>
@@ -166,7 +172,7 @@ function ResultSummaryTable({ userId }: ResultSummaryTableProps) {
                 <span className="row-icon">📈</span>
                 <strong>Net Profit</strong>
               </div>
-              <div className="row-value profit-value">
+              <div className={`row-value ${getProfitClass(pricingSummary.total_profit)}`}>
                 <strong>{formatCurrency(pricingSummary.total_profit)}</strong>
               </div>
             </div>
