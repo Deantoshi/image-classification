@@ -10,13 +10,14 @@ interface UploadResponse {
 interface FileUploadProps {
   onUploadComplete?: () => void;
   isClassifying?: boolean;
+  scenarioSelected?: boolean;
 }
 
 export interface FileUploadRef {
   clearFiles: () => void;
 }
 
-const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplete, isClassifying = false }, ref) => {
+const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplete, isClassifying = false, scenarioSelected = true }, ref) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadResult, setUploadResult] = useState<string | null>(null)
@@ -82,6 +83,10 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
   }
 
   const triggerFileInput = () => {
+    if (!scenarioSelected) {
+      alert('⚠️ Please select a scenario (Bin or Conveyor Belt) before uploading your image')
+      return
+    }
     const fileInput = document.getElementById('file-input') as HTMLInputElement
     if (fileInput && !uploading && !isClassifying) {
       fileInput.click()
@@ -173,13 +178,13 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
         multiple
         accept="image/*"
         onChange={handleFileSelect}
-        disabled={uploading || isClassifying}
+        disabled={!scenarioSelected || uploading || isClassifying}
         className="file-input-hidden"
       />
 
       {/* Plus sign upload area */}
       <div
-        className={`upload-trigger ${uploading || isClassifying ? 'disabled' : ''}`}
+        className={`upload-trigger ${!scenarioSelected || uploading || isClassifying ? 'disabled' : ''}`}
         onClick={triggerFileInput}
         role="button"
         tabIndex={0}
@@ -191,7 +196,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
         }}
       >
         <div className="plus-icon">+</div>
-        <div className="upload-trigger-text">Add Images</div>
+        <div className="upload-trigger-text">{!scenarioSelected ? '⚠️ Select Scenario First' : 'Add Image'}</div>
       </div>
 
       {selectedFiles && selectedFiles.length > 0 && (
@@ -255,10 +260,10 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
       <div className="button-group">
         <button
           onClick={handleUpload}
-          disabled={!selectedFiles || uploading || isClassifying}
+          disabled={!scenarioSelected || !selectedFiles || uploading || isClassifying}
           className="upload-button"
         >
-          {uploading ? '⏳ Uploading...' : isClassifying ? '🔄 Processing...' : '📤 Classify Images'}
+          {!scenarioSelected ? '⚠️ Select Scenario First' : uploading ? '⏳ Uploading...' : isClassifying ? '🔄 Processing...' : '📤 Classify Image'}
         </button>
       </div>
 

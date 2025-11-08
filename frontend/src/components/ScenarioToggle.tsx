@@ -6,7 +6,12 @@ function ScenarioToggle() {
 
   return (
     <div className="scenario-toggle-container">
-      <div className="scenario-toggle-wrapper">
+      {scenario === null && (
+        <div className="scenario-warning">
+          ⚠️ Please select a scenario before uploading your image
+        </div>
+      )}
+      <div className={`scenario-toggle-wrapper ${scenario === null ? 'requires-selection' : ''}`}>
         <button
           className={`scenario-toggle-option ${scenario === 'bin' ? 'active' : ''}`}
           onClick={() => setScenario('bin')}

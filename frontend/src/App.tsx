@@ -8,11 +8,12 @@ import AdminView from './components/AdminView'
 import PopUpInstructions from './components/PopUpInstructions'
 import PictureInstructions from './components/PictureInstructions'
 import ResultSummaryTable from './components/ResultSummaryTable'
-import { ScenarioProvider } from './context/ScenarioContext'
+import { ScenarioProvider, useScenario } from './context/ScenarioContext'
 
-function App() {
+function AppContent() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
   const [isClassifying, setIsClassifying] = useState(false)
+  const { scenario } = useScenario()
   const classifyImageRef = useRef<ClassifyImageRef>(null)
   const classifyImageSectionRef = useRef<HTMLDivElement>(null)
   const fileUploadRef = useRef<FileUploadRef>(null)
@@ -96,28 +97,27 @@ function App() {
   }
 
   return (
-    <ScenarioProvider>
-      <div className="app-container">
-        <PopUpInstructions userId={user.id} />
-        <div className="header-section">
-          <div className="header-content">
-            <h1 className="main-title">
-              🔬 AI Image Processor
-            </h1>
-            <p className="subtitle">
-              Upload images for ML processing with Detectron2
-            </p>
-            <p className="welcome-user">Welcome, <strong>{user.name}</strong>! 👋</p>
-          </div>
-          <button onClick={handleLogout} className="logout-button">
-            <span className="logout-icon">🚪</span>
-            Log Out
-          </button>
+    <div className="app-container">
+      <PopUpInstructions userId={user.id} />
+      <div className="header-section">
+        <div className="header-content">
+          <h1 className="main-title">
+            🔬 AI Image Processor
+          </h1>
+          <p className="subtitle">
+            Upload images for ML processing with Detectron2
+          </p>
+          <p className="welcome-user">Welcome, <strong>{user.name}</strong>! 👋</p>
         </div>
+        <button onClick={handleLogout} className="logout-button">
+          <span className="logout-icon">🚪</span>
+          Log Out
+        </button>
+      </div>
 
-        <PictureInstructions />
+      <PictureInstructions />
 
-        <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} isClassifying={isClassifying} />
+      <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} isClassifying={isClassifying} scenarioSelected={scenario !== null} />
 
         <div ref={classifyImageSectionRef}>
           <ClassifyImage
@@ -132,9 +132,16 @@ function App() {
           <FileDisplay ref={fileDisplayRef} userId={user.id} />
         </div>
 
-        <ResultSummaryTable userId={user.id} />
+      <ResultSummaryTable userId={user.id} />
 
-      </div>
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <ScenarioProvider>
+      <AppContent />
     </ScenarioProvider>
   )
 }
