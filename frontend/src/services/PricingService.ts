@@ -25,6 +25,23 @@ export interface PricingSummary {
   total_not_marketable_revenue: number;
 }
 
+export interface UserProfitData {
+  id: number;
+  user_id: number;
+  scenario: number;
+  total_profit: number;
+  total_revenue: number;
+  total_penalty: number;
+  marketable_proportion: number;
+  not_marketable_proportion: number;
+  total_classifications: number;
+  total_marketable_classifications: number;
+  total_not_marketable_classifications: number;
+  total_marketable_revenue: number;
+  total_not_marketable_revenue: number;
+  timestamp: string;
+}
+
 /**
  * Determines if an analysis record is marketable based on its grade.
  * Grade will be either "Marketable" or "Not Marketable".
@@ -35,9 +52,10 @@ const isMarketable = (analysis: AnalysisRecord): boolean => {
 
 /**
  * Saves profit data to the backend database.
- * Prevents duplicate rows by using unique constraint on (user_id, scenario).
+ * Prevents duplicate rows by using unique constraint on user_id.
+ * Should only be called after successful image classification.
  */
-const saveProfitData = async (
+export const saveProfitData = async (
   user_id: number,
   scenario: Scenario,
   pricingSummary: PricingSummary
@@ -75,6 +93,41 @@ const saveProfitData = async (
     await response.json();
   } catch (error) {
     console.error('Error saving profit data:', error);
+    throw error;
+  }
+};
+
+/**
+ * Retrieves existing profit data for a user from the database.
+ *
+ * @param user_id - The user ID to get profit data for
+ * @returns UserProfitData if found, null if not found
+ */
+export const getUserProfitData = async (
+  user_id: number
+): Promise<UserProfitData | null> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/get-profit/${user_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.status === 404) {
+      // No profit data found for this user
+      return null;
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.profit_data;
+  } catch (error) {
+    console.error('Error getting user profit data:', error);
     throw error;
   }
 };
@@ -149,9 +202,6 @@ export const calculatePricingSummary = async (
       total_marketable_revenue,
       total_not_marketable_revenue,
     };
-
-    // Save profit data to database
-    await saveProfitData(user_id, scenario, summary);
 
     return summary;
   } catch (error) {

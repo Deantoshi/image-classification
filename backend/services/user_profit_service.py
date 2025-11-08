@@ -56,7 +56,8 @@ def get_profit_data(user_id, scenario=None):
                     'total_marketable_classifications': profit[9],
                     'total_not_marketable_classifications': profit[10],
                     'total_marketable_revenue': profit[11],
-                    'total_not_marketable_revenue': profit[12]
+                    'total_not_marketable_revenue': profit[12],
+                    'timestamp': profit[13]
                 }
             return None
         else:
@@ -75,7 +76,8 @@ def get_profit_data(user_id, scenario=None):
                     'total_marketable_classifications': row[9],
                     'total_not_marketable_classifications': row[10],
                     'total_marketable_revenue': row[11],
-                    'total_not_marketable_revenue': row[12]
+                    'total_not_marketable_revenue': row[12],
+                    'timestamp': row[13]
                 }
                 for row in profit
             ]

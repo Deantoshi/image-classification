@@ -5,9 +5,10 @@ import { useScenario } from '../context/ScenarioContext'
 
 interface ResultSummaryTableProps {
   userId: number
+  refreshKey?: number
 }
 
-function ResultSummaryTable({ userId }: ResultSummaryTableProps) {
+function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
   const { scenario } = useScenario()
   const [pricingSummary, setPricingSummary] = useState<PricingSummary | null>(null)
   const [loading, setLoading] = useState(false)
@@ -15,6 +16,11 @@ function ResultSummaryTable({ userId }: ResultSummaryTableProps) {
 
   useEffect(() => {
     const fetchPricingSummary = async () => {
+      if (!scenario) {
+        setPricingSummary(null)
+        return
+      }
+
       setLoading(true)
       setError(null)
       try {
@@ -29,7 +35,7 @@ function ResultSummaryTable({ userId }: ResultSummaryTableProps) {
     }
 
     fetchPricingSummary()
-  }, [userId, scenario])
+  }, [userId, scenario, refreshKey])
 
   if (loading) {
     return (

@@ -78,6 +78,7 @@ def init_db():
             total_not_marketable_classifications INTEGER,
             total_marketable_revenue REAL,
             total_not_marketable_revenue REAL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES user (id)
         )
     ''')
@@ -129,7 +130,7 @@ def delete_user(user_id):
 
 
 def save_user_profit(user_id, scenario, profit_data):
-    """Save or update user profit data. Uses REPLACE to avoid duplicates."""
+    """Save or update user profit data. Uses REPLACE to avoid duplicates. Updates timestamp on every save."""
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
@@ -138,8 +139,8 @@ def save_user_profit(user_id, scenario, profit_data):
             marketable_proportion, not_marketable_proportion,
             total_classifications, total_marketable_classifications,
             total_not_marketable_classifications, total_marketable_revenue,
-            total_not_marketable_revenue
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            total_not_marketable_revenue, timestamp
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
     ''', (
         user_id,
         scenario,
@@ -171,7 +172,7 @@ def get_user_profit(user_id, scenario=None):
                    marketable_proportion, not_marketable_proportion,
                    total_classifications, total_marketable_classifications,
                    total_not_marketable_classifications, total_marketable_revenue,
-                   total_not_marketable_revenue
+                   total_not_marketable_revenue, timestamp
             FROM user_profit
             WHERE user_id = ? AND scenario = ?
         ''', (user_id, scenario))
@@ -182,7 +183,7 @@ def get_user_profit(user_id, scenario=None):
                    marketable_proportion, not_marketable_proportion,
                    total_classifications, total_marketable_classifications,
                    total_not_marketable_classifications, total_marketable_revenue,
-                   total_not_marketable_revenue
+                   total_not_marketable_revenue, timestamp
             FROM user_profit
             WHERE user_id = ?
         ''', (user_id,))

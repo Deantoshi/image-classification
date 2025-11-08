@@ -9,10 +9,12 @@ import PopUpInstructions from './components/PopUpInstructions'
 import PictureInstructions from './components/PictureInstructions'
 import ResultSummaryTable from './components/ResultSummaryTable'
 import { ScenarioProvider, useScenario } from './context/ScenarioContext'
+import { calculatePricingSummary, saveProfitData } from './services/PricingService'
 
 function AppContent() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
   const [isClassifying, setIsClassifying] = useState(false)
+  const [profitRefreshKey, setProfitRefreshKey] = useState(0)
   const { scenario } = useScenario()
   const classifyImageRef = useRef<ClassifyImageRef>(null)
   const classifyImageSectionRef = useRef<HTMLDivElement>(null)
@@ -75,6 +77,17 @@ function AppContent() {
       await fileDisplayRef.current.parseAnalysisCSV()
     }
 
+    // Calculate and save profit data to database (only after successful classification)
+    if (user && scenario) {
+      try {
+        const pricingSummary = await calculatePricingSummary(user.id, scenario)
+        await saveProfitData(user.id, scenario, pricingSummary)
+        console.log('Profit data saved successfully after classification')
+      } catch (error) {
+        console.error('Error saving profit data after classification:', error)
+      }
+    }
+
     // Scroll to the FileDisplay section
     if (fileDisplaySectionRef.current) {
       fileDisplaySectionRef.current.scrollIntoView({
@@ -82,6 +95,9 @@ function AppContent() {
         block: 'start'
       })
     }
+
+    // Trigger profit data refresh - this will recalculate and display
+    setProfitRefreshKey(prev => prev + 1)
 
     // Set classifying state to false when classification is complete
     setIsClassifying(false)
@@ -132,7 +148,7 @@ function AppContent() {
           <FileDisplay ref={fileDisplayRef} userId={user.id} />
         </div>
 
-      <ResultSummaryTable userId={user.id} />
+      <ResultSummaryTable userId={user.id} refreshKey={profitRefreshKey} />
 
     </div>
   )
