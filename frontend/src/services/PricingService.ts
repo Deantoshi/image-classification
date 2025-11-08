@@ -16,6 +16,11 @@ export interface PricingSummary {
   total_penalty: number;
   marketable_proportion: number;
   not_marketable_proportion: number;
+  total_classifications: number;
+  total_marketable_classifications: number;
+  total_not_marketable_classifications: number;
+  total_marketable_revenue: number;
+  total_not_marketable_revenue: number;
 }
 
 /**
@@ -50,6 +55,11 @@ export const calculatePricingSummary = async (
         total_penalty: 0,
         marketable_proportion: 0,
         not_marketable_proportion: 0,
+        total_classifications: 0,
+        total_marketable_classifications: 0,
+        total_not_marketable_classifications: 0,
+        total_marketable_revenue: 0,
+        total_not_marketable_revenue: 0,
       };
     }
 
@@ -85,6 +95,11 @@ export const calculatePricingSummary = async (
       total_penalty,
       marketable_proportion: userMarketableRatio,
       not_marketable_proportion: userNotmarketableRatio,
+      total_classifications: totalClassifications,
+      total_marketable_classifications: marketableCount,
+      total_not_marketable_classifications: notMarketableCount,
+      total_marketable_revenue,
+      total_not_marketable_revenue,
     };
   } catch (error) {
     console.error('Error calculating pricing summary:', error);

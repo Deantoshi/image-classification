@@ -81,39 +81,34 @@ function ResultSummaryTable({ userId }: ResultSummaryTableProps) {
 
         {/* Balance Sheet Table */}
         <div className="balance-sheet">
-          {/* Classification Breakdown Section */}
-          <div className="sheet-section">
-            <div className="section-header">Classification Breakdown</div>
-            <div className="sheet-row">
-              <div className="row-label">
-                <span className="row-icon">✅</span>
-                Marketable Proportion
-              </div>
-              <div className="row-value">
-                {formatPercentage(pricingSummary.marketable_proportion)}
-              </div>
-            </div>
-            <div className="sheet-row">
-              <div className="row-label">
-                <span className="row-icon">❌</span>
-                Not Marketable Proportion
-              </div>
-              <div className="row-value">
-                {formatPercentage(pricingSummary.not_marketable_proportion)}
-              </div>
-            </div>
-          </div>
-
           {/* Revenue Section */}
           <div className="sheet-section">
             <div className="section-header">Revenue</div>
-            <div className="sheet-row subtotal-row">
+            <div className="sheet-row parent-row">
               <div className="row-label">
                 <span className="row-icon">💰</span>
-                Total Revenue
+                <strong>Total Revenue</strong>
               </div>
               <div className="row-value revenue-value">
-                {formatCurrency(pricingSummary.total_revenue)}
+                <strong>{formatCurrency(pricingSummary.total_revenue)}</strong>
+              </div>
+            </div>
+            <div className="sheet-row child-row">
+              <div className="row-label">
+                <span className="row-icon">✅</span>
+                From Marketable
+              </div>
+              <div className="row-value revenue-value">
+                {formatCurrency(pricingSummary.total_marketable_revenue)}
+              </div>
+            </div>
+            <div className="sheet-row child-row">
+              <div className="row-label">
+                <span className="row-icon">❌</span>
+                From Not Marketable
+              </div>
+              <div className="row-value revenue-value">
+                {formatCurrency(pricingSummary.total_not_marketable_revenue)}
               </div>
             </div>
           </div>
@@ -121,13 +116,45 @@ function ResultSummaryTable({ userId }: ResultSummaryTableProps) {
           {/* Deductions Section */}
           <div className="sheet-section">
             <div className="section-header">Deductions</div>
-            <div className="sheet-row">
+            <div className="sheet-row parent-row">
               <div className="row-label">
                 <span className="row-icon">⚖️</span>
-                Penalty {scenario === 'conveyor' && <span className="note-text">(waived for conveyor)</span>}
+                <strong>Total Penalty</strong> {scenario === 'conveyor' && <span className="note-text">(waived for conveyor)</span>}
               </div>
               <div className="row-value penalty-value">
-                ({formatCurrency(pricingSummary.total_penalty)})
+                <strong>({formatCurrency(pricingSummary.total_penalty)})</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Classification Summary */}
+          <div className="sheet-section">
+            <div className="section-header">Classification Summary</div>
+            <div className="sheet-row parent-row">
+              <div className="row-label">
+                <span className="row-icon">📊</span>
+                <strong>Total Classifications</strong>
+              </div>
+              <div className="row-value">
+                <strong>{pricingSummary.total_classifications}</strong>
+              </div>
+            </div>
+            <div className="sheet-row child-row">
+              <div className="row-label">
+                <span className="row-icon">✅</span>
+                Marketable
+              </div>
+              <div className="row-value">
+                {pricingSummary.total_marketable_classifications} ({formatPercentage(pricingSummary.marketable_proportion)})
+              </div>
+            </div>
+            <div className="sheet-row child-row">
+              <div className="row-label">
+                <span className="row-icon">❌</span>
+                Not Marketable
+              </div>
+              <div className="row-value">
+                {pricingSummary.total_not_marketable_classifications} ({formatPercentage(pricingSummary.not_marketable_proportion)})
               </div>
             </div>
           </div>
@@ -146,10 +173,6 @@ function ResultSummaryTable({ userId }: ResultSummaryTableProps) {
           </div>
         </div>
 
-        <div className="farm-footer">
-          <span className="footer-icon">🌱</span>
-          <span className="footer-text">Quality Classification Results</span>
-        </div>
       </div>
     </div>
   )

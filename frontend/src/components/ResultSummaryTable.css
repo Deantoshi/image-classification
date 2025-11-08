@@ -87,17 +87,40 @@
   font-style: italic;
 }
 
-/* Balance Sheet Styles */
+/* Balance Sheet Styles - Yellow Page Format */
 .balance-sheet {
-  background: white;
+  background: linear-gradient(to bottom, #fffacd 0%, #fff9c4 100%);
   border: 2px solid #a0826d;
   border-radius: 10px;
   padding: 25px;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Yellow page lines effect */
+.balance-sheet::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    rgba(139, 111, 71, 0.15) 31px,
+    rgba(139, 111, 71, 0.15) 32px
+  );
+  pointer-events: none;
+  border-radius: 10px;
 }
 
 .sheet-section {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  position: relative;
+  z-index: 1;
 }
 
 .sheet-section:last-child {
@@ -106,14 +129,17 @@
 
 .section-header {
   font-family: 'Georgia', serif;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #5d4e37;
+  color: #4a3d2a;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #d4a574;
+  letter-spacing: 1.5px;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  background: linear-gradient(to right, rgba(212, 165, 116, 0.3), transparent);
+  border-left: 4px solid #8b6f47;
+  position: relative;
+  z-index: 2;
 }
 
 .sheet-row {
@@ -121,17 +147,53 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 15px;
-  border-bottom: 1px solid #e8e0d5;
+  border-bottom: 1px solid rgba(139, 111, 71, 0.2);
   font-family: 'Georgia', serif;
   transition: background-color 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .sheet-row:hover {
-  background-color: #faf7f0;
+  background-color: rgba(255, 250, 205, 0.6);
 }
 
 .sheet-row:last-child {
   border-bottom: none;
+}
+
+/* Parent rows - left aligned, bold */
+.parent-row {
+  padding: 14px 15px;
+  background-color: rgba(255, 250, 205, 0.4);
+  border-top: 2px solid rgba(139, 111, 71, 0.3);
+  border-bottom: 2px solid rgba(139, 111, 71, 0.3);
+  font-weight: 600;
+}
+
+.parent-row:hover {
+  background-color: rgba(255, 250, 205, 0.7);
+}
+
+/* Child rows - indented to the right */
+.child-row {
+  padding: 10px 15px 10px 50px;
+  background-color: transparent;
+  border-bottom: 1px dashed rgba(139, 111, 71, 0.15);
+  font-size: 0.95rem;
+}
+
+.child-row:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.child-row .row-label {
+  color: #6d5c47;
+  font-weight: 400;
+}
+
+.child-row .row-icon {
+  font-size: 1rem;
 }
 
 .row-label {
@@ -174,26 +236,30 @@
 
 /* Total Section */
 .total-section {
-  margin-top: 25px;
-  padding-top: 20px;
+  margin-top: 30px;
+  padding-top: 25px;
   border-top: 3px double #8b6f47;
+  position: relative;
+  z-index: 2;
 }
 
 .total-row {
-  background: linear-gradient(135deg, #faf7f0 0%, #f0ebe3 100%);
-  border: 2px solid #a0826d;
+  background: linear-gradient(135deg, rgba(255, 250, 205, 0.8) 0%, rgba(255, 249, 196, 0.9) 100%);
+  border: 3px solid #8b6f47;
   border-radius: 8px;
-  padding: 16px 15px;
+  padding: 18px 15px;
   font-size: 1.15rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .total-row:hover {
-  background: linear-gradient(135deg, #f5f1e8 0%, #ede4d3 100%);
+  background: linear-gradient(135deg, rgba(255, 250, 205, 0.95) 0%, rgba(255, 249, 196, 1) 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .total-row .row-label,
 .total-row .row-value {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
 /* Value Colors */
@@ -311,6 +377,15 @@
     padding: 10px;
   }
 
+  .parent-row {
+    padding: 12px 10px;
+  }
+
+  .child-row {
+    padding: 8px 10px 8px 35px;
+    font-size: 0.9rem;
+  }
+
   .row-label {
     font-size: 0.95rem;
   }
@@ -354,6 +429,15 @@
     padding: 12px 10px;
   }
 
+  .parent-row {
+    padding: 12px 10px;
+  }
+
+  .child-row {
+    padding: 10px 10px 10px 25px;
+    font-size: 0.85rem;
+  }
+
   .row-value {
     align-self: flex-end;
     min-width: auto;
@@ -361,6 +445,7 @@
 
   .section-header {
     font-size: 0.95rem;
+    padding: 8px 10px;
   }
 
   .row-label {
