@@ -1,4 +1,5 @@
 import './PictureInstructions.css'
+import ScenarioToggle from './ScenarioToggle'
 
 function PictureInstructions() {
   return (
@@ -28,6 +29,7 @@ function PictureInstructions() {
             Utilize the tape measure to make sure you are 6ft vertical distance from sweetpotatoes to camera
           </p>
         </div>
+        <ScenarioToggle />
       </div>
     </div>
   )

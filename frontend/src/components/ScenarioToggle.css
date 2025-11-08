@@ -1,0 +1,80 @@
+.scenario-toggle-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.scenario-toggle-wrapper {
+  display: flex;
+  gap: 15px;
+  background: rgba(139, 111, 71, 0.1);
+  padding: 8px;
+  border-radius: 15px;
+  border: 2px solid #8b6f47;
+}
+
+.scenario-toggle-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: #f5f1e8;
+  border: 2px solid #8b6f47;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  color: #5d4e37;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.scenario-toggle-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: #ede4d3;
+}
+
+.scenario-toggle-option.active {
+  background: linear-gradient(to bottom, #8b6f47, #6d5636);
+  color: #f5f1e8;
+  border-color: #5d4e37;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.scenario-toggle-option.active:hover {
+  background: linear-gradient(to bottom, #6d5636, #5d4e37);
+}
+
+.scenario-icon {
+  font-size: 1.3rem;
+}
+
+.scenario-label {
+  white-space: nowrap;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .scenario-toggle-wrapper {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .scenario-toggle-option {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+
+  .scenario-icon {
+    font-size: 1.2rem;
+  }
+}

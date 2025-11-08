@@ -7,6 +7,7 @@ import FileDisplay, { FileDisplayRef } from './components/FileDisplay'
 import AdminView from './components/AdminView'
 import PopUpInstructions from './components/PopUpInstructions'
 import PictureInstructions from './components/PictureInstructions'
+import { ScenarioProvider } from './context/ScenarioContext'
 
 function App() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
@@ -94,7 +95,7 @@ function App() {
   }
 
   return (
-    <>
+    <ScenarioProvider>
       <div className="app-container">
         <PopUpInstructions userId={user.id} />
         <div className="header-section">
@@ -131,7 +132,7 @@ function App() {
         </div>
 
       </div>
-    </>
+    </ScenarioProvider>
   )
 }
 
