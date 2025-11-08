@@ -6,6 +6,7 @@ import ClassifyImage, { ClassifyImageRef } from './components/ClassifyImage'
 import FileDisplay, { FileDisplayRef } from './components/FileDisplay'
 import AdminView from './components/AdminView'
 import PopUpInstructions from './components/PopUpInstructions'
+import PictureInstructions from './components/PictureInstructions'
 
 function App() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
@@ -111,6 +112,8 @@ function App() {
             Log Out
           </button>
         </div>
+
+        <PictureInstructions />
 
         <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} isClassifying={isClassifying} />
 

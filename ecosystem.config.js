@@ -17,7 +17,8 @@ module.exports = {
       name: 'frontend',
       cwd: './frontend',
       script: 'npm',
-      args: 'run dev -- --host 0.0.0.0',
+      args: 'run dev',
+      // args: 'run dev -- --host 0.0.0.0',
       env: {
         NODE_ENV: 'development'
       },

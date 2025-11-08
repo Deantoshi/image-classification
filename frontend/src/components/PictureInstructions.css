@@ -1,0 +1,82 @@
+.picture-instructions-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.picture-instructions-card {
+  background: linear-gradient(to bottom, #f5f1e8 0%, #ede4d3 100%);
+  border-radius: 20px;
+  padding: 30px 40px;
+  max-width: 800px;
+  width: 100%;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 3px solid #8b6f47;
+  animation: slideDown 0.6s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.picture-instructions-header {
+  margin-bottom: 20px;
+}
+
+.picture-instructions-title {
+  font-size: 2rem;
+  color: #5d4e37;
+  text-align: center;
+  margin: 0;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+}
+
+.picture-instructions-content {
+  text-align: center;
+}
+
+.picture-instructions-message {
+  color: #5d4e37;
+  font-size: 1.2rem;
+  margin: 0;
+  font-family: 'Georgia', serif;
+  line-height: 1.6;
+}
+
+.picture-instructions-message strong {
+  color: #8b1f1f;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .picture-instructions-card {
+    padding: 20px 25px;
+  }
+
+  .picture-instructions-title {
+    font-size: 1.5rem;
+  }
+
+  .picture-instructions-message {
+    font-size: 1rem;
+  }
+
+  .picture-instructions-message strong {
+    font-size: 1.1rem;
+  }
+}
