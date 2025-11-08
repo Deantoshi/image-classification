@@ -130,11 +130,6 @@ function Signup({ onSignupComplete }: SignupProps) {
           )}
         </form>
 
-        <div className="farm-footer">
-          <span className="footer-icon">🍠</span>
-          <span className="footer-text">Sweet Potato Image Processor</span>
-          <span className="footer-icon">🍠</span>
-        </div>
       </div>
     </div>
   );
