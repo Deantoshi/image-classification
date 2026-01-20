@@ -7,8 +7,10 @@ interface SignupProps {
   onSignupComplete: (userId: number, username: string) => void;
 }
 
+const DEFAULT_USERNAME = 'BAE';
+
 function Signup({ onSignupComplete }: SignupProps) {
-  const [username, setUsername] = useState('');
+  const [username] = useState(DEFAULT_USERNAME);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [existingUser, setExistingUser] = useState<{id: number, name: string} | null>(null);
@@ -20,6 +22,8 @@ function Signup({ onSignupComplete }: SignupProps) {
       setError('Please enter a username');
       return;
     }
+
+    const isMockUser = username.trim().toUpperCase() === DEFAULT_USERNAME;
 
     setIsLoading(true);
     setError('');
@@ -35,7 +39,7 @@ function Signup({ onSignupComplete }: SignupProps) {
       };
       localStorage.setItem('user', JSON.stringify(userData));
 
-      if (response.is_new_name === 1) {
+      if (isMockUser || response.is_new_name === 1) {
         // New user - auto-continue
         onSignupComplete(response.id, response.name);
       } else {
@@ -76,10 +80,10 @@ function Signup({ onSignupComplete }: SignupProps) {
               type="text"
               id="username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              readOnly
               placeholder="Enter your name here"
               className="username-input"
-              disabled={isLoading || existingUser !== null}
+              disabled
             />
           </div>
 

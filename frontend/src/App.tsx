@@ -10,6 +10,7 @@ import PictureInstructions from './components/PictureInstructions'
 import ResultSummaryTable from './components/ResultSummaryTable'
 import { ScenarioProvider, useScenario } from './context/ScenarioContext'
 import { calculatePricingSummary, saveProfitData } from './services/PricingService'
+import { addImageMatch } from './services/ImageService'
 
 function AppContent() {
   const [user, setUser] = useState<{ id: number; name: string } | null>(null)
@@ -21,6 +22,7 @@ function AppContent() {
   const fileUploadRef = useRef<FileUploadRef>(null)
   const fileDisplayRef = useRef<FileDisplayRef>(null)
   const fileDisplaySectionRef = useRef<HTMLDivElement>(null)
+  const isMockUser = user?.name === 'BAE'
 
   // Check localStorage for existing user on mount
   useEffect(() => {
@@ -45,7 +47,31 @@ function AppContent() {
     setUser(null)
   }
 
-  const handleUploadComplete = () => {
+  const handleUploadComplete = async () => {
+    if (isMockUser) {
+      if (user && scenario) {
+        const sampleFileName = scenario === 'conveyor' ? 'SamplePackingLine.png' : 'SampleTopBin.png'
+        const maskedFileName = `masked_${sampleFileName}`
+
+        try {
+          await addImageMatch(maskedFileName, user.id)
+        } catch (error) {
+          console.error('Failed to add mock image match:', error)
+        }
+
+        await handleClassifyComplete()
+        return
+      }
+
+      if (fileDisplaySectionRef.current) {
+        fileDisplaySectionRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+      }
+      return
+    }
+
     // Set classifying state to true when starting classification
     setIsClassifying(true)
 
@@ -133,7 +159,14 @@ function AppContent() {
 
       <PictureInstructions />
 
-      <FileUpload ref={fileUploadRef} onUploadComplete={handleUploadComplete} isClassifying={isClassifying} scenarioSelected={scenario !== null} />
+      <FileUpload
+        ref={fileUploadRef}
+        onUploadComplete={handleUploadComplete}
+        isClassifying={isClassifying}
+        scenarioSelected={scenario !== null}
+        scenario={scenario}
+        isMockUser={isMockUser}
+      />
 
         <div ref={classifyImageSectionRef}>
           <ClassifyImage

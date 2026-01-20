@@ -8,22 +8,25 @@ interface UploadResponse {
 }
 
 interface FileUploadProps {
-  onUploadComplete?: () => void;
+  onUploadComplete?: () => void | Promise<void>;
   isClassifying?: boolean;
   scenarioSelected?: boolean;
+  scenario?: 'bin' | 'conveyor' | null;
+  isMockUser?: boolean;
 }
 
 export interface FileUploadRef {
   clearFiles: () => void;
 }
 
-const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplete, isClassifying = false, scenarioSelected = true }, ref) => {
+const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplete, isClassifying = false, scenarioSelected = true, scenario = null, isMockUser = false }, ref) => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadResult, setUploadResult] = useState<string | null>(null)
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
   const [showPreviews, setShowPreviews] = useState(false)
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
+  const [mockScenarioLoaded, setMockScenarioLoaded] = useState<'bin' | 'conveyor' | null>(null)
 
   const API_BASE_URL = import.meta.env.VITE_BACKEND_BASE_API_URL || 'http://localhost:8000'
 
@@ -54,6 +57,9 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
   }, [selectedFiles])
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (isMockUser) {
+      return
+    }
     const newFiles = event.target.files
     if (!newFiles || newFiles.length === 0) return
 
@@ -87,15 +93,62 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
       alert('⚠️ Please select a scenario (Bin or Packing Line) before uploading your image')
       return
     }
+    if (isMockUser) {
+      return
+    }
     const fileInput = document.getElementById('file-input') as HTMLInputElement
     if (fileInput && !uploading && !isClassifying) {
       fileInput.click()
     }
   }
 
+  const buildFileList = (file: File) => {
+    const dataTransfer = new DataTransfer()
+    dataTransfer.items.add(file)
+    return dataTransfer.files
+  }
+
+  const loadMockSample = async (targetScenario: 'bin' | 'conveyor') => {
+    try {
+      const samplePath = targetScenario === 'conveyor' ? '/SamplePackingLine.png' : '/SampleTopBin.png'
+      const sampleName = targetScenario === 'conveyor' ? 'SamplePackingLine.png' : 'SampleTopBin.png'
+      const response = await fetch(samplePath)
+      if (!response.ok) {
+        throw new Error(`Failed to load sample image: ${samplePath}`)
+      }
+      const blob = await response.blob()
+      const sampleFile = new File([blob], sampleName, { type: blob.type || 'image/png' })
+      const fileList = buildFileList(sampleFile)
+
+      setSelectedFiles(fileList)
+      setUploadedFiles([sampleName])
+      setUploadResult(`✅ Sample image loaded: ${sampleName}`)
+      setShowPreviews(true)
+      setMockScenarioLoaded(targetScenario)
+    } catch (error) {
+      console.error('Mock sample load error:', error)
+      setUploadResult('❌ Error: Unable to load sample image for mock flow.')
+    }
+  }
+
+  useEffect(() => {
+    if (!isMockUser || scenario === null) return
+    if (scenario === mockScenarioLoaded) return
+    loadMockSample(scenario)
+  }, [isMockUser, scenario, mockScenarioLoaded])
+
   const handleUpload = async () => {
     if (!selectedFiles || selectedFiles.length === 0) {
       alert('Please select files to upload')
+      return
+    }
+
+    if (isMockUser) {
+      setUploadResult(`✅ Mock upload ready: ${Array.from(selectedFiles).map(file => file.name).join(', ')}`)
+      setUploadedFiles(Array.from(selectedFiles).map(file => file.name))
+      if (onUploadComplete) {
+        onUploadComplete()
+      }
       return
     }
 
@@ -178,13 +231,13 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
         multiple
         accept="image/*"
         onChange={handleFileSelect}
-        disabled={!scenarioSelected || uploading || isClassifying}
+        disabled={!scenarioSelected || uploading || isClassifying || isMockUser}
         className="file-input-hidden"
       />
 
       {/* Plus sign upload area */}
       <div
-        className={`upload-trigger ${!scenarioSelected || uploading || isClassifying ? 'disabled' : ''}`}
+        className={`upload-trigger ${!scenarioSelected || uploading || isClassifying || isMockUser ? 'disabled' : ''}`}
         onClick={triggerFileInput}
         role="button"
         tabIndex={0}
@@ -196,7 +249,9 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
         }}
       >
         <div className="plus-icon">+</div>
-        <div className="upload-trigger-text">{!scenarioSelected ? '⚠️ Select Scenario First' : 'Add Image'}</div>
+        <div className="upload-trigger-text">
+          {!scenarioSelected ? '⚠️ Select Scenario First' : isMockUser ? 'Sample Image Auto-Loaded' : 'Add Image'}
+        </div>
       </div>
 
       {selectedFiles && selectedFiles.length > 0 && (
