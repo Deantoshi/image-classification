@@ -22,10 +22,10 @@ function PictureInstructions() {
             </div>
 
             <div className="scenario-card">
-              <h3 className="scenario-title">🏭 Scenario 2: Conveyer Belt</h3>
+              <h3 className="scenario-title">🏭 Scenario 2: Packing Line</h3>
               <ul className="scenario-list">
-                <li>Take the sweetpotatoes out of the box, laying them on the conveyor belt</li>
-                <li>Take a picture of the sweetpotatoes laid out on the conveyor belt</li>
+                <li>Take the sweetpotatoes out of the box, laying them on the packing line</li>
+                <li>Take a picture of the sweetpotatoes laid out on the packing line</li>
               </ul>
             </div>
           </div>

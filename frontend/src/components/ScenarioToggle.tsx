@@ -24,7 +24,7 @@ function ScenarioToggle() {
           onClick={() => setScenario('conveyor')}
         >
           <span className="scenario-icon">🏭</span>
-          <span className="scenario-label">Scenario 2: Conveyor Belt</span>
+          <span className="scenario-label">Scenario 2: Packing Line</span>
         </button>
       </div>
     </div>

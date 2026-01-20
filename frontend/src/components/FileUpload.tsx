@@ -84,7 +84,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
 
   const triggerFileInput = () => {
     if (!scenarioSelected) {
-      alert('⚠️ Please select a scenario (Bin or Conveyor Belt) before uploading your image')
+      alert('⚠️ Please select a scenario (Bin or Packing Line) before uploading your image')
       return
     }
     const fileInput = document.getElementById('file-input') as HTMLInputElement
