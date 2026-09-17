@@ -1,0 +1,163 @@
+2026-09-17T18:37:53: INFO:     Will watch for changes in these directories: ['/home/image-classification/backend']
+2026-09-17T18:37:53: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-09-17T18:37:53: INFO:     Started reloader process [158751] using WatchFiles
+2026-09-17T18:37:53: Form data requires "python-multipart" to be installed. 
+2026-09-17T18:37:53: You can install "python-multipart" with: 
+2026-09-17T18:37:53: 
+2026-09-17T18:37:53: pip install python-multipart
+2026-09-17T18:37:53: 
+2026-09-17T18:37:53: Process SpawnProcess-1:
+2026-09-17T18:37:53: Traceback (most recent call last):
+2026-09-17T18:37:53:   File "/usr/lib/python3.14/multiprocessing/process.py", line 320, in _bootstrap
+2026-09-17T18:37:53:     self.run()
+2026-09-17T18:37:53:     ~~~~~~~~^^
+2026-09-17T18:37:53:   File "/usr/lib/python3.14/multiprocessing/process.py", line 108, in run
+2026-09-17T18:37:53:     self._target(*self._args, **self._kwargs)
+2026-09-17T18:37:53:     ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
+2026-09-17T18:37:53:     target(sockets=sockets)
+2026-09-17T18:37:53:     ~~~~~~^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/uvicorn/server.py", line 86, in run
+2026-09-17T18:37:53:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+2026-09-17T18:37:53:   File "/usr/lib/python3.14/asyncio/runners.py", line 204, in run
+2026-09-17T18:37:53:     return runner.run(main)
+2026-09-17T18:37:53:            ~~~~~~~~~~^^^^^^
+2026-09-17T18:37:53:   File "/usr/lib/python3.14/asyncio/runners.py", line 127, in run
+2026-09-17T18:37:53:     return self._loop.run_until_complete(task)
+2026-09-17T18:37:53:            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+2026-09-17T18:37:53:   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/uvicorn/server.py", line 90, in serve
+2026-09-17T18:37:53:     await self._serve(sockets)
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/uvicorn/server.py", line 97, in _serve
+2026-09-17T18:37:53:     config.load()
+2026-09-17T18:37:53:     ~~~~~~~~~~~^^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/uvicorn/config.py", line 511, in load
+2026-09-17T18:37:53:     self.loaded_app = self.load_app()
+2026-09-17T18:37:53:                       ~~~~~~~~~~~~~^^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/uvicorn/config.py", line 434, in load_app
+2026-09-17T18:37:53:     return import_from_string(self.app)
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/uvicorn/importer.py", line 19, in import_from_string
+2026-09-17T18:37:53:     module = importlib.import_module(module_str)
+2026-09-17T18:37:53:   File "/usr/lib/python3.14/importlib/__init__.py", line 88, in import_module
+2026-09-17T18:37:53:     return _bootstrap._gcd_import(name[level:], package, level)
+2026-09-17T18:37:53:            ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:   File "<frozen importlib._bootstrap>", line 1406, in _gcd_import
+2026-09-17T18:37:53:   File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+2026-09-17T18:37:53:   File "<frozen importlib._bootstrap>", line 1342, in _find_and_load_unlocked
+2026-09-17T18:37:53:   File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
+2026-09-17T18:37:53:   File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+2026-09-17T18:37:53:   File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+2026-09-17T18:37:53:   File "/home/image-classification/backend/server.py", line 49, in <module>
+2026-09-17T18:37:53:     @app.post("/upload")
+2026-09-17T18:37:53:      ~~~~~~~~^^^^^^^^^^^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 3004, in decorator
+2026-09-17T18:37:53:     self.add_api_route(
+2026-09-17T18:37:53:     ~~~~~~~~~~~~~~~~~~^
+2026-09-17T18:37:53:         path,
+2026-09-17T18:37:53:         ^^^^^
+2026-09-17T18:37:53:     ...<23 lines>...
+2026-09-17T18:37:53:         generate_unique_id_function=generate_unique_id_function,
+2026-09-17T18:37:53:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:     )
+2026-09-17T18:37:53:     ^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2939, in add_api_route
+2026-09-17T18:37:53:     route = route_class(
+2026-09-17T18:37:53:         self.prefix + path,
+2026-09-17T18:37:53:     ...<27 lines>...
+2026-09-17T18:37:53:         ),
+2026-09-17T18:37:53:     )
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1193, in __init__
+2026-09-17T18:37:53:     _populate_api_route_state(
+2026-09-17T18:37:53:     ~~~~~~~~~~~~~~~~~~~~~~~~~^
+2026-09-17T18:37:53:         cast(_APIRouteLike, self),
+2026-09-17T18:37:53:         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:     ...<26 lines>...
+2026-09-17T18:37:53:         strict_content_type=strict_content_type,
+2026-09-17T18:37:53:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:     )
+2026-09-17T18:37:53:     ^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1061, in _populate_api_route_state
+2026-09-17T18:37:53:     ) = _build_dependant_with_parameterless_dependencies(
+2026-09-17T18:37:53:         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+2026-09-17T18:37:53:         path=route.path_format,
+2026-09-17T18:37:53:         ^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:         call=route.endpoint,
+2026-09-17T18:37:53:         ^^^^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:         dependencies=route.dependencies,
+2026-09-17T18:37:53:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-17T18:37:53:     )
+2026-09-17T18:37:53:     ^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 861, in _build_dependant_with_parameterless_dependencies
+2026-09-17T18:37:53:     dependant = get_dependant(path=path, call=call, scope="function")
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 296, in get_dependant
+2026-09-17T18:37:53:     param_details = analyze_param(
+2026-09-17T18:37:53:         param_name=param_name,
+2026-09-17T18:37:53:     ...<2 lines>...
+2026-09-17T18:37:53:         is_path_param=is_path_param,
+2026-09-17T18:37:53:     )
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 523, in analyze_param
+2026-09-17T18:37:53:     ensure_multipart_is_installed()
+2026-09-17T18:37:53:     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+2026-09-17T18:37:53:   File "/home/image-classification/backend/.venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 129, in ensure_multipart_is_installed
+2026-09-17T18:37:53:     raise RuntimeError(multipart_not_installed_error) from None
+2026-09-17T18:37:53: RuntimeError: Form data requires "python-multipart" to be installed. 
+2026-09-17T18:37:53: You can install "python-multipart" with: 
+2026-09-17T18:37:53: 
+2026-09-17T18:37:53: pip install python-multipart
+2026-09-17T18:37:53: 
+2026-09-17T18:38:15: WARNING:  WatchFiles detected changes in '.venv/lib64/python3.14/site-packages/multipart/multipart.py', '.venv/lib64/python3.14/site-packages/python_multipart/decoders.py', '.venv/lib64/python3.14/site-packages/multipart/decoders.py', '.venv/lib64/python3.14/site-packages/python_multipart/__init__.py', '.venv/lib64/python3.14/site-packages/python_multipart/exceptions.py', '.venv/lib64/python3.14/site-packages/multipart/exceptions.py', '.venv/lib64/python3.14/site-packages/multipart/__init__.py', '.venv/lib64/python3.14/site-packages/python_multipart/multipart.py'. Reloading...
+2026-09-17T18:38:15: INFO:     Started server process [158944]
+2026-09-17T18:38:15: INFO:     Waiting for application startup.
+2026-09-17T18:38:15: INFO:     Application startup complete.
+2026-09-17T18:38:15: INFO:     Shutting down
+2026-09-17T18:38:15: INFO:     Waiting for application shutdown.
+2026-09-17T18:38:15: INFO:     Application shutdown complete.
+2026-09-17T18:38:15: INFO:     Finished server process [158944]
+2026-09-17T18:38:15: INFO:     Stopping reloader process [158751]
+2026-09-17T18:38:15: INFO:     Will watch for changes in these directories: ['/home/image-classification/backend']
+2026-09-17T18:38:15: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-09-17T18:38:15: INFO:     Started reloader process [158955] using WatchFiles
+2026-09-17T18:38:16: INFO:     Started server process [158957]
+2026-09-17T18:38:16: INFO:     Waiting for application startup.
+2026-09-17T18:38:16: INFO:     Application startup complete.
+2026-09-17T18:40:24: INFO:     Shutting down
+2026-09-17T18:40:24: INFO:     Waiting for application shutdown.
+2026-09-17T18:40:24: INFO:     Application shutdown complete.
+2026-09-17T18:40:24: INFO:     Finished server process [158957]
+2026-09-17T18:40:24: INFO:     Stopping reloader process [158955]
+2026-09-17T18:40:24: INFO:     Will watch for changes in these directories: ['/home/image-classification/backend']
+2026-09-17T18:40:24: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-09-17T18:40:24: INFO:     Started reloader process [159374] using WatchFiles
+2026-09-17T18:40:25: INFO:     Started server process [159377]
+2026-09-17T18:40:25: INFO:     Waiting for application startup.
+2026-09-17T18:40:25: INFO:     Application startup complete.
+2026-09-17T18:40:28: INFO:     Shutting down
+2026-09-17T18:40:28: INFO:     Waiting for application shutdown.
+2026-09-17T18:40:28: INFO:     Application shutdown complete.
+2026-09-17T18:40:28: INFO:     Finished server process [159377]
+2026-09-17T18:40:28: INFO:     Stopping reloader process [159374]
+2026-09-17T18:40:31: INFO:     Will watch for changes in these directories: ['/home/image-classification/backend']
+2026-09-17T18:40:31: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-09-17T18:40:31: INFO:     Started reloader process [159455] using WatchFiles
+2026-09-17T18:40:31: INFO:     Started server process [159465]
+2026-09-17T18:40:31: INFO:     Waiting for application startup.
+2026-09-17T18:40:31: INFO:     Application startup complete.
+2026-09-17T18:47:05: WARNING:  WatchFiles detected changes in 'server.py'. Reloading...
+2026-09-17T18:47:06: INFO:     Shutting down
+2026-09-17T18:47:06: INFO:     Waiting for application shutdown.
+2026-09-17T18:47:06: INFO:     Application shutdown complete.
+2026-09-17T18:47:06: INFO:     Finished server process [159465]
+2026-09-17T18:47:06: INFO:     Started server process [160306]
+2026-09-17T18:47:06: INFO:     Waiting for application startup.
+2026-09-17T18:47:06: INFO:     Application startup complete.
+2026-09-17T18:47:51: INFO:     Shutting down
+2026-09-17T18:47:52: INFO:     Waiting for application shutdown.
+2026-09-17T18:47:52: INFO:     Application shutdown complete.
+2026-09-17T18:47:52: INFO:     Finished server process [160306]
+2026-09-17T18:47:52: INFO:     Stopping reloader process [159455]
+2026-09-17T18:47:52: INFO:     Will watch for changes in these directories: ['/home/image-classification/backend']
+2026-09-17T18:47:52: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-09-17T18:47:52: INFO:     Started reloader process [160551] using WatchFiles
+2026-09-17T18:47:52: INFO:     Started server process [160558]
+2026-09-17T18:47:52: INFO:     Waiting for application startup.
+2026-09-17T18:47:52: INFO:     Application startup complete.

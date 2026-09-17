@@ -25,8 +25,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
-        "http://34.31.3.46:5173",  # Add your VM's IP
-        "http://34.31.3.46:3000"  # Add your VM's IP
+        "http://2.28.59.223:5173",  # VPS public IP
+        "http://2.28.59.223:3000"
     ],
     allow_credentials=True,
     allow_methods=["*"],
