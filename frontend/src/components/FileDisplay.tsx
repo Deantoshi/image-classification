@@ -481,7 +481,7 @@ const FileDisplay = forwardRef<FileDisplayRef, FileDisplayProps>(({ userId }, re
                           <td>{analysis.volume_px3.toFixed(2)}</td>
                           <td>{analysis.area_in2.toFixed(2)}</td>
                           <td>{analysis.weight_oz.toFixed(2)}</td>
-                          <td className={`grade-${analysis.grade.replace(/\s+/g, '-').toLowerCase()}`}>
+                          <td className={`grade-${analysis.grade.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`}>
                             {analysis.grade}
                           </td>
                           <td>${analysis.price_usd.toFixed(3)}</td>

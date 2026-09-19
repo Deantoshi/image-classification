@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './ResultSummaryTable.css'
-import { calculatePricingSummary, PricingSummary } from '../services/PricingService'
+import { getSavedPricingSummary, PricingSummary, PENALTY_RATE_RANGES } from '../services/PricingService'
 import { useScenario } from '../context/ScenarioContext'
 
 interface ResultSummaryTableProps {
@@ -24,7 +24,8 @@ function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
       setLoading(true)
       setError(null)
       try {
-        const summary = await calculatePricingSummary(userId, scenario)
+        // Show the saved result of the last run so the random penalty matches what was recorded
+        const summary = await getSavedPricingSummary(userId, scenario)
         setPricingSummary(summary)
       } catch (err) {
         console.error('Error fetching pricing summary:', err)
@@ -63,9 +64,11 @@ function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
     )
   }
 
-  if (!pricingSummary) {
+  if (!pricingSummary || !scenario) {
     return null
   }
+
+  const [minPenaltyRate, maxPenaltyRate] = PENALTY_RATE_RANGES[scenario]
 
   const formatCurrency = (value: number) => {
     return `$${value.toFixed(2)}`
@@ -83,12 +86,11 @@ function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
 
   return (
     <div className="summary-container">
-      <div className="grain-background"></div>
       <div className="summary-card">
         <div className="wheat-icon">🌾</div>
         <h2 className="summary-title">Financial Summary</h2>
         <p className="summary-subtitle">
-          {scenario === 'bin' ? 'Bin Scenario' : 'Conveyor Scenario'}
+          {scenario === 'bin' ? 'Truck View Adventure' : 'Packing Line View Adventure'}
         </p>
 
         {/* Balance Sheet Table */}
@@ -108,7 +110,7 @@ function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
             <div className="sheet-row child-row">
               <div className="row-label">
                 <span className="row-icon">✅</span>
-                From Marketable
+                From US Grade 1
               </div>
               <div className="row-value revenue-value">
                 {formatCurrency(pricingSummary.total_marketable_revenue)}
@@ -117,7 +119,7 @@ function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
             <div className="sheet-row child-row">
               <div className="row-label">
                 <span className="row-icon">❌</span>
-                From Not Marketable
+                From Small/Jumbo
               </div>
               <div className="row-value revenue-value">
                 {formatCurrency(pricingSummary.total_not_marketable_revenue)}
@@ -131,10 +133,28 @@ function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
             <div className="sheet-row parent-row">
               <div className="row-label">
                 <span className="row-icon">⚖️</span>
-                <strong>Total Penalty</strong> {scenario === 'conveyor' && <span className="note-text">(waived for conveyor)</span>}
+                <strong>Total Penalty</strong>
               </div>
               <div className="row-value penalty-value">
                 <strong>({formatCurrency(pricingSummary.total_penalty)})</strong>
+              </div>
+            </div>
+            <div className="sheet-row child-row">
+              <div className="row-label">
+                <span className="row-icon">🎲</span>
+                Penalty Rate <span className="note-text">(random {formatPercentage(minPenaltyRate)}–{formatPercentage(maxPenaltyRate)} per run)</span>
+              </div>
+              <div className="row-value">
+                {formatPercentage(pricingSummary.penalty_rate)}
+              </div>
+            </div>
+            <div className="sheet-row child-row">
+              <div className="row-label">
+                <span className="row-icon">🧮</span>
+                {formatPercentage(pricingSummary.penalty_rate)} × {formatCurrency(pricingSummary.total_revenue)} Revenue
+              </div>
+              <div className="row-value penalty-value">
+                ({formatCurrency(pricingSummary.total_penalty)})
               </div>
             </div>
           </div>
@@ -154,7 +174,7 @@ function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
             <div className="sheet-row child-row">
               <div className="row-label">
                 <span className="row-icon">✅</span>
-                Marketable
+                US Grade 1
               </div>
               <div className="row-value">
                 {pricingSummary.total_marketable_classifications} ({formatPercentage(pricingSummary.marketable_proportion)})
@@ -163,7 +183,7 @@ function ResultSummaryTable({ userId, refreshKey }: ResultSummaryTableProps) {
             <div className="sheet-row child-row">
               <div className="row-label">
                 <span className="row-icon">❌</span>
-                Not Marketable
+                Small/Jumbo
               </div>
               <div className="row-value">
                 {pricingSummary.total_not_marketable_classifications} ({formatPercentage(pricingSummary.not_marketable_proportion)})

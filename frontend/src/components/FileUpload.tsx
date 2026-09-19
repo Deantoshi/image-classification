@@ -90,7 +90,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
 
   const triggerFileInput = () => {
     if (!scenarioSelected) {
-      alert('⚠️ Please select a scenario (Bin or Packing Line) before uploading your image')
+      alert('⚠️ Please select an adventure (Truck View or Packing Line View) before uploading your image')
       return
     }
     if (isMockUser) {
@@ -250,7 +250,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
       >
         <div className="plus-icon">+</div>
         <div className="upload-trigger-text">
-          {!scenarioSelected ? '⚠️ Select Scenario First' : isMockUser ? 'Sample Image Auto-Loaded' : 'Add Image'}
+          {!scenarioSelected ? '⚠️ Select Adventure First' : isMockUser ? 'Sample Image Auto-Loaded' : 'Add Image'}
         </div>
       </div>
 
@@ -318,7 +318,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({ onUploadComplet
           disabled={!scenarioSelected || !selectedFiles || uploading || isClassifying}
           className="upload-button"
         >
-          {!scenarioSelected ? '⚠️ Select Scenario First' : uploading ? '⏳ Uploading...' : isClassifying ? '🔄 Processing...' : '📤 Classify Image'}
+          {!scenarioSelected ? '⚠️ Select Adventure First' : uploading ? '⏳ Uploading...' : isClassifying ? '🔄 Processing...' : '📤 Classify Image'}
         </button>
       </div>
 

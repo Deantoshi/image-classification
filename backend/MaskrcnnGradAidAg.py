@@ -84,10 +84,10 @@ def check_cuda():
 
 def assign_grade(weight_oz):
     """Assigns a grade based on weight in ounces."""
-    if 5.3 <= weight_oz < 28.2:
-        return 'Marketable'
+    if 9.0 <= weight_oz < 20.0:
+        return 'US Grade 1'
     else:
-        return 'Not Marketable'
+        return 'Small/Jumbo'
     
 def random_saturated_color():
     """Generates a random saturated color tuple (BGR)."""
@@ -303,8 +303,8 @@ def finalize_data_and_save(all_data_frames, output_dir):
         #combined_df["maxdiameter_in"] = combined_df["width_px"] * INCHES_PER_PIXEL
         combined_df['Grade'] = combined_df['weight_oz'].apply(lambda x: assign_grade(x) if pd.notnull(x) else None)
         
-        combined_df['Price USD'] = np.where(combined_df['Grade'] == 'Marketable', 0.56, 
-                                       np.where(combined_df['Grade'] == 'Not Marketable', 0.008, np.nan))
+        combined_df['Price USD'] = np.where(combined_df['Grade'] == 'US Grade 1', 0.56, 
+                                       np.where(combined_df['Grade'] == 'Small/Jumbo', 0.18, np.nan))
         
         csv_path = os.path.join(output_dir, 'combined_analysis_with_grades.csv')
 

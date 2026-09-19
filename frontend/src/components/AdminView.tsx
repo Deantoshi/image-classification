@@ -30,6 +30,14 @@ interface AdminViewProps {
   onLogout: () => void;
 }
 
+const LEADERBOARD_QUERY = 'SELECT u.name, ROUND(MAX(up.total_profit), 2) as profit FROM user_profit up JOIN user u ON up.user_id = u.id GROUP BY u.id, u.name ORDER BY MAX(up.total_profit) DESC';
+
+const PODIUM = [
+  { className: 'podium-gold', medal: '🥇' },
+  { className: 'podium-silver', medal: '🥈' },
+  { className: 'podium-bronze', medal: '🥉' },
+];
+
 function AdminView({ username, userId, onLogout }: AdminViewProps) {
   const [activeTab, setActiveTab] = useState<'query' | 'tables' | 'images'>('query');
   const [sqlQuery, setSqlQuery] = useState('SELECT * FROM user');
@@ -41,13 +49,47 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
   const [tableSchema, setTableSchema] = useState<TableSchema[]>([]);
   const [images, setImages] = useState<ImageInfo[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [leaderboard, setLeaderboard] = useState<QueryResult | null>(null);
+  const [leaderboardError, setLeaderboardError] = useState('');
+  const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(false);
 
   const API_BASE_URL = import.meta.env.VITE_BACKEND_BASE_API_URL || 'http://localhost:8000';
 
   useEffect(() => {
+    loadLeaderboard();
     loadTables();
     loadImages();
+
+    // Keep the leaderboard current while the page is open
+    const leaderboardInterval = setInterval(() => loadLeaderboard(true), 15000);
+    return () => clearInterval(leaderboardInterval);
   }, []);
+
+  const loadLeaderboard = async (isBackgroundRefresh = false) => {
+    if (!isBackgroundRefresh) setIsLeaderboardLoading(true);
+    setLeaderboardError('');
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/query`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: LEADERBOARD_QUERY }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Failed to load leaderboard');
+      }
+
+      setLeaderboard(data);
+    } catch (err) {
+      setLeaderboardError(err instanceof Error ? err.message : 'Failed to load leaderboard');
+    } finally {
+      setIsLeaderboardLoading(false);
+    }
+  };
 
   const loadTables = async () => {
     try {
@@ -173,6 +215,7 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
   };
 
   const quickQueries = [
+    { label: 'Leaderboard', query: LEADERBOARD_QUERY },
     { label: 'All Users', query: 'SELECT * FROM user' },
     { label: 'All Images', query: 'SELECT * FROM image_match' },
     { label: 'All Analysis Data', query: 'SELECT ua.object_id, ua.user_id, u.name as user_name, up.total_profit, ua.image_name, ua.object_id_in_image, ua.area_px2, ua.top_left_x, ua.top_left_y, ua.bottom_right_x, ua.bottom_right_y, ua.center, ua.width_px, ua.length_px, ua.volume_px3, ua.solidity, ua.strict_solidity, ua.lw_ratio, ua.area_in2, ua.weight_oz, ua.grade, ua.price_usd FROM user_analysis ua LEFT JOIN user u ON ua.user_id = u.id LEFT JOIN user_profit up ON ua.user_id = up.user_id ORDER BY up.timestamp DESC' },
@@ -193,6 +236,51 @@ function AdminView({ username, userId, onLogout }: AdminViewProps) {
             Logout
           </button>
         </div>
+      </div>
+
+      <div className="leaderboard-section">
+        <div className="leaderboard-header">
+          <h2>Leaderboard</h2>
+          <button className="refresh-btn" onClick={() => loadLeaderboard()} disabled={isLeaderboardLoading}>
+            {isLeaderboardLoading ? 'Refreshing...' : 'Refresh Leaderboard'}
+          </button>
+        </div>
+
+        {leaderboardError && (
+          <div className="error-box">
+            <span className="error-icon">⚠️</span>
+            {leaderboardError}
+          </div>
+        )}
+
+        {leaderboard && leaderboard.row_count === 0 && (
+          <div className="empty-state">
+            <p>No classifications yet</p>
+          </div>
+        )}
+
+        {leaderboard && leaderboard.row_count > 0 && (
+          <div className="table-wrapper">
+            <table className="results-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Profit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leaderboard.data.map((row, idx) => (
+                  <tr key={idx} className={idx < 3 ? `podium-row ${PODIUM[idx].className}` : undefined}>
+                    <td>{idx < 3 ? `${PODIUM[idx].medal} ${idx + 1}` : idx + 1}</td>
+                    <td>{row.name}</td>
+                    <td>{row.profit !== null ? `$${Number(row.profit).toFixed(2)}` : 'NULL'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <div className="admin-tabs">

@@ -7,10 +7,10 @@ interface SignupProps {
   onSignupComplete: (userId: number, username: string) => void;
 }
 
-const DEFAULT_USERNAME = 'BAE';
+const MOCK_USERNAME = 'BAE';
 
 function Signup({ onSignupComplete }: SignupProps) {
-  const [username] = useState(DEFAULT_USERNAME);
+  const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [existingUser, setExistingUser] = useState<{id: number, name: string} | null>(null);
@@ -23,7 +23,7 @@ function Signup({ onSignupComplete }: SignupProps) {
       return;
     }
 
-    const isMockUser = username.trim().toUpperCase() === DEFAULT_USERNAME;
+    const isMockUser = username.trim().toUpperCase() === MOCK_USERNAME;
 
     setIsLoading(true);
     setError('');
@@ -80,10 +80,10 @@ function Signup({ onSignupComplete }: SignupProps) {
               type="text"
               id="username"
               value={username}
-              readOnly
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter your name here"
               className="username-input"
-              disabled
+              disabled={isLoading || existingUser !== null}
             />
           </div>
 

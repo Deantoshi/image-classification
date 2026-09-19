@@ -5,11 +5,10 @@ import FileUpload, { FileUploadRef } from './components/FileUpload'
 import ClassifyImage, { ClassifyImageRef } from './components/ClassifyImage'
 import FileDisplay, { FileDisplayRef } from './components/FileDisplay'
 import AdminView from './components/AdminView'
-import PopUpInstructions from './components/PopUpInstructions'
 import PictureInstructions from './components/PictureInstructions'
 import ResultSummaryTable from './components/ResultSummaryTable'
 import { ScenarioProvider, useScenario } from './context/ScenarioContext'
-import { calculatePricingSummary, saveProfitData } from './services/PricingService'
+import { calculatePricingSummary, randomPenaltyRate, saveProfitData } from './services/PricingService'
 import { addImageMatch } from './services/ImageService'
 
 function AppContent() {
@@ -106,7 +105,7 @@ function AppContent() {
     // Calculate and save profit data to database (only after successful classification)
     if (user && scenario) {
       try {
-        const pricingSummary = await calculatePricingSummary(user.id, scenario)
+        const pricingSummary = await calculatePricingSummary(user.id, randomPenaltyRate(scenario))
         await saveProfitData(user.id, scenario, pricingSummary)
         console.log('Profit data saved successfully after classification')
       } catch (error) {
@@ -140,7 +139,6 @@ function AppContent() {
 
   return (
     <div className="app-container">
-      <PopUpInstructions userId={user.id} />
       <div className="header-section">
         <div className="header-content">
           <h1 className="main-title">
@@ -155,6 +153,15 @@ function AppContent() {
           <span className="logout-icon">🚪</span>
           Log Out
         </button>
+      </div>
+
+      <div className="goal-section">
+        <h2 className="goal-title">🎯 Goal: Make the most profit</h2>
+        <img
+          src="/potato_value_chart.png"
+          alt="Sweetpotato value by size: small and jumbo sweetpotatoes are worth less, mid-size sweetpotatoes are worth the most"
+          className="goal-chart"
+        />
       </div>
 
       <PictureInstructions />

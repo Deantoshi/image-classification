@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 25px;
+  margin-bottom: 20px;
   gap: 12px;
 }
 
@@ -32,17 +32,17 @@
   }
 }
 
-.scenario-toggle-wrapper {
-  display: flex;
-  gap: 15px;
-  background: rgba(139, 111, 71, 0.1);
+.scenario-toggle-container .scenarios-section {
+  width: 100%;
+  margin-bottom: 10px;
   padding: 8px;
   border-radius: 15px;
-  border: 2px solid #8b6f47;
+  border: 2px solid transparent;
+  box-sizing: border-box;
   transition: all 0.3s ease;
 }
 
-.scenario-toggle-wrapper.requires-selection {
+.scenarios-section.requires-selection {
   border-color: #ff6b6b;
   background: rgba(255, 107, 107, 0.1);
   animation: borderPulse 2s ease-in-out infinite;
@@ -59,54 +59,46 @@
   }
 }
 
-.scenario-toggle-option {
+button.scenario-card {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
-  background: #f5f1e8;
-  border: 2px solid #8b6f47;
-  border-radius: 12px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  text-align: left;
+  font: inherit;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Georgia', serif;
-  font-size: 1rem;
-  color: #5d4e37;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.scenario-toggle-option:hover {
+button.scenario-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
   background: #ede4d3;
 }
 
-.scenario-toggle-option.active {
+button.scenario-card:focus-visible {
+  outline: 3px solid #8b6f47;
+  outline-offset: 2px;
+}
+
+button.scenario-card.active {
   background: linear-gradient(to bottom, #8b6f47, #6d5636);
-  color: #f5f1e8;
   border-color: #5d4e37;
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.scenario-toggle-option.active:hover {
-  background: linear-gradient(to bottom, #6d5636, #5d4e37);
-}
-
-.scenario-icon {
-  font-size: 1.3rem;
-}
-
-.scenario-label {
-  white-space: nowrap;
+button.scenario-card.active .scenario-title,
+button.scenario-card.active .scenario-list {
+  color: #f5f1e8;
+  border-color: #f5f1e8;
 }
 
 /* Tablet Design (2000 × 1200) */
 @media (min-width: 1200px) and (max-width: 2000px) {
   .scenario-toggle-container {
-    margin-top: 35px;
+    margin-bottom: 25px;
     gap: 16px;
   }
 
@@ -115,44 +107,5 @@
     border-radius: 12px;
     font-size: 1.2rem;
     border-width: 3px;
-  }
-
-  .scenario-toggle-wrapper {
-    gap: 20px;
-    padding: 10px;
-    border-radius: 18px;
-    border-width: 3px;
-  }
-
-  .scenario-toggle-option {
-    padding: 16px 32px;
-    border-width: 3px;
-    border-radius: 14px;
-    font-size: 1.2rem;
-  }
-
-  .scenario-icon {
-    font-size: 1.6rem;
-  }
-}
-
-/* Responsive design */
-@media (max-width: 600px) {
-  .scenario-toggle-wrapper {
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .scenario-toggle-option {
-    width: 100%;
-    justify-content: center;
-    padding: 10px 20px;
-    font-size: 0.95rem;
-  }
-
-  .scenario-icon {
-    font-size: 1.2rem;
   }
 }

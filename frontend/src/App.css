@@ -216,6 +216,44 @@ code {
   font-size: 1.2rem;
 }
 
+.goal-section {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 25px 30px 30px;
+  background: linear-gradient(to bottom, #f5f1e8 0%, #ede4d3 100%);
+  border-radius: 20px;
+  border: 3px solid #8b6f47;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.goal-title {
+  color: #5d4e37;
+  font-size: 2rem;
+  margin: 0 0 20px 0;
+  font-weight: 700;
+  font-family: 'Georgia', serif;
+}
+
+.goal-chart {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 12px;
+  background: #fff;
+}
+
+@media (max-width: 600px) {
+  .goal-section {
+    padding: 20px 16px;
+  }
+
+  .goal-title {
+    font-size: 1.5rem;
+  }
+}
+
 .getting-started {
   margin-top: 40px;
   padding: 25px;

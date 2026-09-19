@@ -54,6 +54,75 @@
   text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
 }
 
+.leaderboard-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(to bottom, #f5f1e8 0%, #ede4d3 100%);
+  border-radius: 12px;
+  border: 3px solid #8b6f47;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: #5d4e37;
+  position: relative;
+  z-index: 1;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.leaderboard-header h2 {
+  margin: 0;
+  font-family: 'Georgia', serif;
+}
+
+.leaderboard-section .podium-row td {
+  font-weight: 700;
+}
+
+.leaderboard-section .podium-gold td {
+  color: #6b4f00;
+}
+
+.leaderboard-section .podium-silver td {
+  color: #3f4a55;
+}
+
+.leaderboard-section .podium-bronze td {
+  color: #5c3317;
+}
+
+.leaderboard-section .results-table tr.podium-gold {
+  background: linear-gradient(135deg, #fff4c2 0%, #f7d774 100%);
+}
+
+.leaderboard-section .results-table tr.podium-silver {
+  background: linear-gradient(135deg, #f4f6f8 0%, #cfd6dd 100%);
+}
+
+.leaderboard-section .results-table tr.podium-bronze {
+  background: linear-gradient(135deg, #f8e1cc 0%, #dba577 100%);
+}
+
+.leaderboard-section .podium-gold td:first-child {
+  box-shadow: inset 5px 0 0 #d4a017;
+}
+
+.leaderboard-section .podium-silver td:first-child {
+  box-shadow: inset 5px 0 0 #9aa5b1;
+}
+
+.leaderboard-section .podium-bronze td:first-child {
+  box-shadow: inset 5px 0 0 #b0703a;
+}
+
+.leaderboard-section .results-table tr.podium-row:hover {
+  filter: brightness(1.05);
+}
+
 .admin-info {
   display: flex;
   gap: 1rem;

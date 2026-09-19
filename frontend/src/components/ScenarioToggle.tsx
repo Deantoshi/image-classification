@@ -8,23 +8,33 @@ function ScenarioToggle() {
     <div className="scenario-toggle-container">
       {scenario === null && (
         <div className="scenario-warning">
-          ⚠️ Please select a scenario before uploading your image
+          ⚠️ Please select an adventure before uploading your image
         </div>
       )}
-      <div className={`scenario-toggle-wrapper ${scenario === null ? 'requires-selection' : ''}`}>
+      <div className={`scenarios-section ${scenario === null ? 'requires-selection' : ''}`}>
         <button
-          className={`scenario-toggle-option ${scenario === 'bin' ? 'active' : ''}`}
+          type="button"
+          className={`scenario-card ${scenario === 'bin' ? 'active' : ''}`}
           onClick={() => setScenario('bin')}
+          aria-pressed={scenario === 'bin'}
         >
-          <span className="scenario-icon">📦</span>
-          <span className="scenario-label">Scenario 1: Bin</span>
+          <h3 className="scenario-title">🚚 Adventure 1: Truck View</h3>
+          <ul className="scenario-list">
+            <li>Take a picture of the sweetpotatoes in the bin</li>
+          </ul>
         </button>
+
         <button
-          className={`scenario-toggle-option ${scenario === 'conveyor' ? 'active' : ''}`}
+          type="button"
+          className={`scenario-card ${scenario === 'conveyor' ? 'active' : ''}`}
           onClick={() => setScenario('conveyor')}
+          aria-pressed={scenario === 'conveyor'}
         >
-          <span className="scenario-icon">🏭</span>
-          <span className="scenario-label">Scenario 2: Packing Line</span>
+          <h3 className="scenario-title">📦 Adventure 2: Packing Line View</h3>
+          <ul className="scenario-list">
+            <li>Take the sweetpotatoes out of the box, laying them on the packing line</li>
+            <li>Take a picture of the sweetpotatoes laid out on the packing line</li>
+          </ul>
         </button>
       </div>
     </div>

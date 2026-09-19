@@ -389,6 +389,13 @@
   color: #6a1b9a;
 }
 
+.analyses-table td.grade-us-grade-1,
+.analyses-table td.grade-marketable {
+  background: rgba(76, 175, 80, 0.2);
+  color: #2e7d32;
+}
+
+.analyses-table td.grade-small-jumbo,
 .analyses-table td.grade-not-marketable {
   background: rgba(244, 67, 54, 0.2);
   color: #c62828;

@@ -10,25 +10,10 @@ function PictureInstructions() {
         </div>
         <div className="picture-instructions-content">
           <p className="picture-instructions-intro">
-            You may choose to complete one of the following scenarios:
+            You may choose to complete one of the following adventures:
           </p>
 
-          <div className="scenarios-section">
-            <div className="scenario-card">
-              <h3 className="scenario-title">📦 Scenario 1: Bin</h3>
-              <ul className="scenario-list">
-                <li>Take a picture of the sweetpotatoes in the bin</li>
-              </ul>
-            </div>
-
-            <div className="scenario-card">
-              <h3 className="scenario-title">🏭 Scenario 2: Packing Line</h3>
-              <ul className="scenario-list">
-                <li>Take the sweetpotatoes out of the box, laying them on the packing line</li>
-                <li>Take a picture of the sweetpotatoes laid out on the packing line</li>
-              </ul>
-            </div>
-          </div>
+          <ScenarioToggle />
 
           <div className="requirements-section">
             <h3 className="requirements-title">Requirements</h3>
@@ -38,7 +23,6 @@ function PictureInstructions() {
             </ul>
           </div>
         </div>
-        <ScenarioToggle />
       </div>
     </div>
   )
